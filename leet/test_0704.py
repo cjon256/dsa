@@ -4,7 +4,16 @@ from typing import List
 
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
-        pass
+        start, end = 0, len(nums)
+        while start < end:
+            midpoint = (start + end) // 2
+            if target == nums[midpoint]:
+                return midpoint
+            if target > nums[midpoint]:
+                start = midpoint + 1
+            else:
+                end = midpoint
+        return -1
 
 
 class TestSolution(unittest.TestCase):
@@ -16,6 +25,21 @@ class TestSolution(unittest.TestCase):
     def test_2(self):
         nums = [-1, 0, 3, 5, 9, 12]
         target = 2
+        self.assertEqual(Solution().search(nums, target), -1)
+
+    def test_3(self):
+        nums = [5]
+        target = 5
+        self.assertEqual(Solution().search(nums, target), 0)
+
+    def test_4(self):
+        nums = [5]
+        target = -5
+        self.assertEqual(Solution().search(nums, target), -1)
+
+    def test_5(self):
+        nums = []
+        target = 0
         self.assertEqual(Solution().search(nums, target), -1)
 
 
