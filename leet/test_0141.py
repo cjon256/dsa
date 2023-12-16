@@ -10,11 +10,33 @@ class ListNode:
 
 
 class Solution:
+    def hasCycle_hash(self, head: Optional[ListNode]) -> bool:
+        if head is None:
+            return False
+        node_dict = {}
+        curr = head
+        while curr is not None:
+            if curr.val in node_dict:
+                if curr in node_dict[curr.val]:
+                    return True
+                else:
+                    node_dict[curr.val].append(curr)
+            else:
+                node_dict[curr.val] = [curr]
+            curr = curr.next
+        return False
+
     def hasCycle(self, head: Optional[ListNode]) -> bool:
         if head is None:
             return False
-        pass
-
+        slow_ptr, fast_ptr = head, head.next
+        while True:
+            if fast_ptr is None or fast_ptr.next is None:
+                return False
+            if slow_ptr == fast_ptr:
+                return True
+            slow_ptr = slow_ptr.next
+            fast_ptr = fast_ptr.next.next
 
 class TestSolution(unittest.TestCase):
     def test1(self):
