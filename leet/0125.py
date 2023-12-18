@@ -11,30 +11,42 @@ class Solution:
 
 
 class TestSolution(unittest.TestCase):
-    def test_isPalindrome(self):
-        solution = Solution()
-
+    def test_isPalindrome_01(self):
         # Test case 1: Empty string
-        self.assertTrue(solution.isPalindrome(""))
+        self.assertTrue(Solution().isPalindrome(""))
 
+    def test_isPalindrome_02(self):
         # Test case 2: Single character
-        self.assertTrue(solution.isPalindrome("a"))
+        self.assertTrue(Solution().isPalindrome("a"))
 
+    def test_isPalindrome_03(self):
         # Test case 3: Palindrome with even length
-        self.assertTrue(solution.isPalindrome("racecar"))
+        self.assertTrue(Solution().isPalindrome("racecar"))
 
+    def test_isPalindrome_04(self):
         # Test case 4: Palindrome with odd length
-        self.assertTrue(solution.isPalindrome("level"))
+        self.assertTrue(Solution().isPalindrome("level"))
 
+    def test_isPalindrome_05(self):
         # Test case 5: Non-palindrome
-        self.assertFalse(solution.isPalindrome("hello"))
+        self.assertFalse(Solution().isPalindrome("hello"))
 
+    def test_isPalindrome_06(self):
         # Test case 6: Palindrome with special characters
-        self.assertTrue(solution.isPalindrome(
+        self.assertTrue(Solution().isPalindrome(
             "A man, a plan, a canal: Panama"))
 
+    def test_isPalindrome_07(self):
         # Test case 7: Non-palindrome with special characters
-        self.assertFalse(solution.isPalindrome("race a car"))
+        self.assertFalse(Solution().isPalindrome("race a car"))
+
+    def test_isPalindrome_08(self):
+        # Test case 8: Extremely long palindrome
+        self.assertTrue(Solution().isPalindrome("a"*1000000))
+
+    def test_isPalindrome_09(self):
+        # Test case 9: Extremely long non-palindrome
+        self.assertFalse(Solution().isPalindrome("a"*1000000+"b"))
 
 
 if __name__ == '__main__':
