@@ -8,15 +8,10 @@ class Solution:
         result = 0
         at_least_one_odd = False
         for v in ctr.values():
-            if v % 2 == 0:
-                result += v
-            else:
-                if at_least_one_odd:
-                    result += v - 1
-                else:
-                    result += v
-                    at_least_one_odd = True
-        return result
+            result += v // 2
+            if not at_least_one_odd and v % 2 == 1:
+                at_least_one_odd = True
+        return result * 2 + 1 if at_least_one_odd else result * 2
 
 
 class TestSolution(unittest.TestCase):
