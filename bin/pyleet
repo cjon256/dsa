@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+
+# parse subcommand create, test and submit (assume python3)
+
+import argparse
+import os
+
+import leetopenlib
+
+# load environment variable for PYLEETCODE
+base_path = os.environ.get("PYLEETCODE_PATH")
+
+argparser = argparse.ArgumentParser(description="leet")
+argparser.add_argument("-f", action="store_true", help="force overwrite")
+argparser.add_argument("subcommand", choices=["create", "test", "submit"])
+argparser.add_argument("problem", help="problem number")
+args = argparser.parse_args()
+
+problem_id = args.problem
+problem_name = leetopenlib.lookup_problem(problem_id)
+
+if problem_name is None:
+    print(f"problem {problem_id} not found")
+    exit(1)
+
+filename = f"{problem_id}.{problem_name}.py"
+leetcode_path = os.path.expanduser("~/.leetcode") + "/code/" + filename
+local_path = base_path + "/python/" + filename
+leetcode_python_config_path = (
+    os.path.expanduser("~/.leetcode") + "/leetcode-python.toml"
+)
+leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
+
+if args.subcommand == "create":
+    if os.path.exists(local_path) and not args.f:
+        print(f"python/{filename} already exists")
+        exit(1)
+    if not os.path.exists(leetcode_python_config_path):
+        os.system("cd ~/.leetcode && make")
+    os.system(f"cp {leetcode_python_config_path} {leetcode_config_path}")
+    os.system(f"leetcode edit {problem_id}")
+    os.system(f"mv {leetcode_path} {local_path}")
+    print(f"created python/{filename}")
+elif args.subcommand == "test":
+    print(f"testing {args.problem}")
+    os.system(f"leetcode test {args.problem}")
+elif args.subcommand == "submit":
+    print(f"submitting {args.problem}")
+    os.system(f"leetcode exec {args.problem}")
