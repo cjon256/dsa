@@ -8,7 +8,7 @@ import os
 import leetopenlib
 
 # load environment variable for PYLEETCODE
-base_path = os.environ.get("PYLEETCODE_PATH")
+base_path = os.environ.get("LEET_CODE_PATH")
 leetcode_path = os.path.expanduser("~/.leetcode")
 
 argparser = argparse.ArgumentParser(description="leet")
