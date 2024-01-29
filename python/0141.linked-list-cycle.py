@@ -42,6 +42,11 @@
 #
 #
 #  Follow up: Can you solve it using O(1) (i.e. constant) memory?
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
 
 
 import unittest
@@ -65,11 +70,6 @@ def list_to_looped_linked_list(nums, pos):
 
 
 #  start_marker
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
 
 
 class Solution:
@@ -82,6 +82,22 @@ class Solution:
                 return True
             slow = slow.next
             fast = fast.next.next
+        return False
+
+    def hasCycle_hash(self, head: Optional[ListNode]) -> bool:
+        if head is None:
+            return False
+        node_dict = {}
+        curr = head
+        while curr is not None:
+            if curr.val in node_dict:
+                if curr in node_dict[curr.val]:
+                    return True
+                else:
+                    node_dict[curr.val].append(curr)
+            else:
+                node_dict[curr.val] = [curr]
+            curr = curr.next
         return False
 
 
@@ -107,6 +123,21 @@ class TestSolution(unittest.TestCase):
         head = list_to_looped_linked_list(vals, pos)
         expected_result = False
         self.assertEqual(Solution().hasCycle(head), expected_result)
+
+    def test_case_4(self):
+        head = ListNode(1)
+        self.assertEqual(False, Solution().hasCycle(head))
+
+    def test_case_5(self):
+        head = None
+        self.assertEqual(False, Solution().hasCycle(head))
+
+    # description says nothing about node values being unique
+    def test_case_6(self):
+        vals = [1, 1, 2]
+        pos = 0
+        head = list_to_looped_linked_list(vals, pos)
+        self.assertEqual(True, Solution().hasCycle(head))
 
 
 if __name__ == "__main__":
