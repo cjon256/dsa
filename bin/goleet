@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+
+import leetopenlib
+
+# load environment variable for PYLEETCODE
+base_path = os.environ.get("LEET_CODE_PATH")
+leetcode_path = os.path.expanduser("~/.leetcode")
+
+argparser = argparse.ArgumentParser(description="leetcode for Go")
+argparser.add_argument("-f", action="store_true", help="force overwrite")
+argparser.add_argument(
+    "subcommand", choices=["create", "c", "test", "t", "submit", "x"]
+)
+argparser.add_argument("problem", help="problem number")
+args = argparser.parse_args()
+
+problem_id = args.problem
+problem_name = leetopenlib.lookup_problem(problem_id)
+
+if problem_name is None:
+    print(f"problem {problem_id} not found")
+    exit(1)
+
+dirname = f"{int(problem_id):04d}.{problem_name}"
+module_name = f"{problem_name.replace('-', '_')}_{problem_id}"
+filename = f"{dirname}.go"
+leetcode_path = f"{leetcode_path}/code/{problem_id}.{problem_name}.go"
+local_dir = f"{base_path}/go/{dirname}/"
+local_path = f"{local_dir}/{filename}"
+leetcode_go_config_path = os.path.expanduser("~/.leetcode") + "/leetcode-go.toml"
+leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
+
+print(f"problem {problem_id} {problem_name} {args.subcommand}")
+
+if args.subcommand == "create" or args.subcommand == "c":
+    if os.path.exists(local_path) and not args.f:
+        print(f"go/{filename} already exists")
+        exit(1)
+    # put leetcode into go mode
+    if not os.path.exists(leetcode_go_config_path):
+        os.system("cd ~/.leetcode && make")
+    os.system(f"cp {leetcode_go_config_path} {leetcode_config_path}")
+    # invoke leetcode to create the file
+    os.system(f"leetcode edit {problem_id}")
+    # now move the file to the correct location
+    os.system(f"mkdir -p {local_dir}")
+    os.system(f"mv {leetcode_path} {local_path}")
+    # postprocessing: set module name and run gotests
+    os.system(f"gsed -i '1 i package {module_name}' {local_path}")
+    os.system(f"(cd {local_dir} && gotests -all -parallel=1 -w .)")
+    print(f"created go/{filename}")
+elif args.subcommand == "test" or args.subcommand == "t":
+    print(f"testing {filename}")
+    # have to copy the file to leetcode path for testing
+    os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode test {problem_id}")
+elif args.subcommand == "submit" or args.subcommand == "x":
+    print(f"submitting {filename}")
+    # have to copy the file to leetcode path for submitting
+    os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode exec {problem_id}")
+else:
+    print("unknown subcommand")
+    exit(1)
