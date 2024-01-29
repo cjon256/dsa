@@ -9,10 +9,13 @@ import leetopenlib
 
 # load environment variable for PYLEETCODE
 base_path = os.environ.get("PYLEETCODE_PATH")
+leetcode_path = os.path.expanduser("~/.leetcode")
 
 argparser = argparse.ArgumentParser(description="leet")
 argparser.add_argument("-f", action="store_true", help="force overwrite")
-argparser.add_argument("subcommand", choices=["create", "test", "submit"])
+argparser.add_argument(
+    "subcommand", choices=["create", "c", "test", "t", "submit", "x"]
+)
 argparser.add_argument("problem", help="problem number")
 args = argparser.parse_args()
 
@@ -23,15 +26,17 @@ if problem_name is None:
     print(f"problem {problem_id} not found")
     exit(1)
 
-filename = f"{problem_id}.{problem_name}.py"
-leetcode_path = os.path.expanduser("~/.leetcode") + "/code/" + filename
-local_path = base_path + "/python/" + filename
+filename = f"{int(problem_id):04d}.{problem_name}.py"
+leetcode_path = f"{leetcode_path}/code/{problem_id}.{problem_name}.py"
+local_path = f"{base_path}/python/{filename}"
 leetcode_python_config_path = (
     os.path.expanduser("~/.leetcode") + "/leetcode-python.toml"
 )
 leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
 
-if args.subcommand == "create":
+print(f"problem {problem_id} {problem_name} {args.subcommand}")
+
+if args.subcommand == "create" or args.subcommand == "c":
     if os.path.exists(local_path) and not args.f:
         print(f"python/{filename} already exists")
         exit(1)
@@ -40,10 +45,17 @@ if args.subcommand == "create":
     os.system(f"cp {leetcode_python_config_path} {leetcode_config_path}")
     os.system(f"leetcode edit {problem_id}")
     os.system(f"mv {leetcode_path} {local_path}")
+    os.system(r"gsed -i '/^    def /a\        pass' " + local_path)
+    os.system(f"cat {base_path}/lib/share/pyleet/test-block.py >> {local_path}")
     print(f"created python/{filename}")
-elif args.subcommand == "test":
-    print(f"testing {args.problem}")
-    os.system(f"leetcode test {args.problem}")
-elif args.subcommand == "submit":
-    print(f"submitting {args.problem}")
-    os.system(f"leetcode exec {args.problem}")
+elif args.subcommand == "test" or args.subcommand == "t":
+    print(f"testing {filename}")
+    os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode test {problem_id}")
+elif args.subcommand == "submit" or args.subcommand == "x":
+    print(f"submitting {filename}")
+    os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode exec {problem_id}")
+else:
+    print("unknown subcommand")
+    exit(1)
