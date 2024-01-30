@@ -9,12 +9,13 @@ import leetopenlib
 
 # load environment variable for PYLEETCODE
 base_path = os.environ.get("LEET_CODE_PATH")
+EDITOR = os.environ.get("EDITOR", "nvim")
 leetcode_path = os.path.expanduser("~/.leetcode")
 
 argparser = argparse.ArgumentParser(description="leet")
 argparser.add_argument("-f", action="store_true", help="force overwrite")
 argparser.add_argument(
-    "subcommand", choices=["create", "c", "test", "t", "submit", "x"]
+    "subcommand", choices=["create", "c", "test", "t", "submit", "x", "edit", "info"]
 )
 argparser.add_argument("problem", help="problem number")
 args = argparser.parse_args()
@@ -34,9 +35,8 @@ leetcode_python_config_path = (
 )
 leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
 
-print(f"problem {problem_id} {problem_name} {args.subcommand}")
 
-if args.subcommand == "create" or args.subcommand == "c":
+def create_problem():
     if os.path.exists(local_path) and not args.f:
         print(f"python/{filename} already exists")
         exit(1)
@@ -48,6 +48,12 @@ if args.subcommand == "create" or args.subcommand == "c":
     os.system(r"gsed -i '/^    def /a\        pass' " + local_path)
     os.system(f"cat {base_path}/lib/share/pyleet/test-block.py >> {local_path}")
     print(f"created python/{filename}")
+
+
+print(f"problem {problem_id} {problem_name} {args.subcommand}")
+
+if args.subcommand == "create" or args.subcommand == "c":
+    create_problem()
 elif args.subcommand == "test" or args.subcommand == "t":
     print(f"testing {filename}")
     os.system(f"cp {local_path} {leetcode_path}")
@@ -55,7 +61,13 @@ elif args.subcommand == "test" or args.subcommand == "t":
 elif args.subcommand == "submit" or args.subcommand == "x":
     print(f"submitting {filename}")
     os.system(f"cp {local_path} {leetcode_path}")
-    os.system(f"leetcode exec {problem_id}")
+elif args.subcommand == "edit":
+    if not os.path.exists(local_path):
+        create_problem()
+    os.system(f"(cd {base_path}/python && {EDITOR} {filename})")
+elif args.subcommand == "info":
+    print(f"dir: {base_path}/python")
+    print(f"file: {filename}")
 else:
     print("unknown subcommand")
     exit(1)
