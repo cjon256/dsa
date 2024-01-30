@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+
+import leetopenlib
+
+# load environment variable for PYLEETCODE
+base_path = os.environ.get("LEET_CODE_PATH")
+leetcode_path = os.path.expanduser("~/.leetcode")
+
+argparser = argparse.ArgumentParser(description="leetcode for Rust")
+argparser.add_argument("-f", action="store_true", help="force overwrite")
+argparser.add_argument(
+    "subcommand", choices=["create", "c", "test", "t", "submit", "x"]
+)
+argparser.add_argument("problem", help="problem number")
+args = argparser.parse_args()
+
+problem_id = args.problem
+problem_name = leetopenlib.lookup_problem(problem_id)
+
+if problem_name is None:
+    print(f"problem {problem_id} not found")
+    exit(1)
+
+broken_module_name = problem_name.replace("-", "_")
+fixed_module_name = f"_{int(problem_id):04d}_{broken_module_name}"
+filename = f"{fixed_module_name}.rs"
+leetcode_path = f"{leetcode_path}/code/{problem_id}.{problem_name}.rs"
+rust_dir = f"{base_path}/rust"
+src_dir = f"{rust_dir}/src"
+local_path = f"{base_path}/rust/src/{filename}"
+leetcode_rust_config_path = os.path.expanduser("~/.leetcode") + "/leetcode-rust.toml"
+leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
+
+lib_path = f"{src_dir}/lib.rs"
+
+cargoleet_path = os.path.expanduser(
+    f"{base_path}/rust/src/{problem_name.replace('-', '_')}.rs"
+)
+CODE_BELOW = (
+    "<< ---------------- Code below here is only for local use ---------------- >>"
+)
+
+print(f"problem {problem_id} {problem_name} {args.subcommand}")
+
+
+def do_in_dir(dir, cmd):
+    os.system(f"(cd {dir} && {cmd})")
+
+
+if args.subcommand == "create" or args.subcommand == "c":
+    if os.path.exists(local_path) and not args.f:
+        print(f"rust/{filename} already exists")
+        exit(1)
+    # put leetcode into rust mode
+    if not os.path.exists(leetcode_rust_config_path):
+        os.system("cd ~/.leetcode && make")
+    os.system(f"cp {leetcode_rust_config_path} {leetcode_config_path}")
+    # invoke leetcode to create the file
+    os.system(f"leetcode edit {problem_id}")
+    # now move the file to the correct location
+    os.system(f"mv {leetcode_path} {local_path}")
+    # postprocessing: set module name and run rusttests
+    print(f"created rust/src/{filename}")
+    # generate test code with cargo leet
+    do_in_dir(rust_dir, f"cargo leet gen {problem_name}")
+    # trim the beginning of the file
+    os.system(f"ex -c '1,/^\/\/ {CODE_BELOW}/d' -cwq {cargoleet_path}")
+    # append the rest of the file to the final file and delete it
+    os.system(f"cat {cargoleet_path} >> {local_path}")
+    os.system(f"rm {cargoleet_path}")
+    os.system(f"gsed -i 's/{broken_module_name}/{fixed_module_name}/' {lib_path}")
+elif args.subcommand == "test" or args.subcommand == "t":
+    print(f"testing {filename}")
+    # have to copy the file to leetcode path for testing
+    os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode test {problem_id}")
+elif args.subcommand == "submit" or args.subcommand == "x":
+    print(f"submitting {filename}")
+    # have to copy the file to leetcode path for submitting
+    os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode exec {problem_id}")
+else:
+    print("unknown subcommand")
+    exit(1)
