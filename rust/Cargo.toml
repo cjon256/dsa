@@ -1,0 +1,10 @@
+[package]
+name = "leet-rust"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cargo-leet = { git = "https://github.com/cjon256/cargo-leet.git", branch = "develop", version = "0.2.0" }
+rstest = "0.18.2"

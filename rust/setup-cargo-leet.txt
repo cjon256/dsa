@@ -1,0 +1,7 @@
+ 1028  cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop --features=tool
+ 1044  cargo add --git https://github.com/cjon256/cargo-leet.git --branch develop
+ 1047  cargo add rstest
+ 1042  cargo d
+ 1053  cargo leet gen -n two-sum
+ 1054  vim src/_1_two_sum.rs
+ 1055  cargo test
