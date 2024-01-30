@@ -28,7 +28,7 @@ dirname = f"{int(problem_id):04d}.{problem_name}"
 module_name = f"{problem_name.replace('-', '_')}_{problem_id}"
 filename = f"{dirname}.go"
 leetcode_path = f"{leetcode_path}/code/{problem_id}.{problem_name}.go"
-local_dir = f"{base_path}/go/{dirname}/"
+local_dir = f"{base_path}/go/{dirname}"
 local_path = f"{local_dir}/{filename}"
 leetcode_go_config_path = os.path.expanduser("~/.leetcode") + "/leetcode-go.toml"
 leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
@@ -51,7 +51,7 @@ if args.subcommand == "create" or args.subcommand == "c":
     # postprocessing: set module name and run gotests
     os.system(f"gsed -i '1 i package {module_name}' {local_path}")
     os.system(f"(cd {local_dir} && gotests -all -parallel=1 -w .)")
-    print(f"created go/{filename}")
+    print(f"created go/{dirname}/{filename}")
 elif args.subcommand == "test" or args.subcommand == "t":
     print(f"testing {filename}")
     # have to copy the file to leetcode path for testing
