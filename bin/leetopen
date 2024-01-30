@@ -3,7 +3,7 @@
 import sys
 import webbrowser
 
-from leetcode import lookup_problem
+from leetopenlib import lookup_problem
 
 
 def usage():
