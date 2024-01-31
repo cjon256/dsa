@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# parse subcommand create, test and submit (assume python3)
+# Python3 version of leetcode-cli wrapper
 
 import argparse
 import os
@@ -66,6 +66,8 @@ elif args.subcommand == "edit":
         create_problem()
     os.system(f"(cd {base_path}/python && {EDITOR} {filename})")
 elif args.subcommand == "info":
+    if not os.path.exists(local_path):
+        create_problem()
     print(f"dir: {base_path}/python")
     print(f"file: {filename}")
 else:
