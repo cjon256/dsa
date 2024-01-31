@@ -61,6 +61,7 @@ elif args.subcommand == "test" or args.subcommand == "t":
 elif args.subcommand == "submit" or args.subcommand == "x":
     print(f"submitting {filename}")
     os.system(f"cp {local_path} {leetcode_path}")
+    os.system(f"leetcode exec {problem_id}")
 elif args.subcommand == "edit":
     if not os.path.exists(local_path):
         create_problem()
