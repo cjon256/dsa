@@ -70,6 +70,30 @@ from typing import List
 #  start_marker
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
+        def cell_to_box(i, j):
+            return (i // 3) * 3 + j // 3
+
+        rows = [set() for _ in range(9)]
+        columns = [set() for _ in range(9)]
+        boxes = [set() for _ in range(9)]
+
+        for i in range(9):
+            for j in range(9):
+                element = board[i][j]
+                if element == ".":
+                    continue
+                if (
+                    element in rows[i]
+                    or element in columns[j]
+                    or element in boxes[cell_to_box(i, j)]
+                ):
+                    return False
+                rows[i].add(element)
+                columns[j].add(element)
+                boxes[cell_to_box(i, j)].add(element)
+        return True
+
+    def isValidSudoku_old(self, board: List[List[str]]) -> bool:
         def get_three_by_three(board, i):
             start_x = i // 3 * 3
             start_y = i % 3 * 3
