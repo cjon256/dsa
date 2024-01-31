@@ -39,6 +39,8 @@
 #
 #
 #  Follow-up: Can you come up with an algorithm that is less than O(n²) time complexity?
+import unittest
+
 #  start_marker
 from typing import List
 
@@ -55,3 +57,27 @@ class Solution:
 
 
 #  end_marker
+
+
+class TestSolution(unittest.TestCase):
+    def test_example(self):
+        nums = [2, 7, 11, 15]
+        target = 9
+        expected = [0, 1]
+        self.assertListEqual(Solution().twoSum(nums, target), expected)
+
+    def test_example2(self):
+        nums = [3, 2, 4]
+        target = 6
+        expected = [1, 2]
+        self.assertListEqual(Solution().twoSum(nums, target), expected)
+
+    def test_example3(self):
+        nums = [3, 3]
+        target = 6
+        expected = [0, 1]
+        self.assertListEqual(Solution().twoSum(nums, target), expected)
+
+
+if __name__ == "__main__":
+    unittest.main()
