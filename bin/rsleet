@@ -45,8 +45,7 @@ cargoleet_path = os.path.expanduser(
 CODE_BELOW = (
     "<< ---------------- Code below here is only for local use ---------------- >>"
 )
-
-print(f"problem {problem_id} {problem_name} {args.subcommand}")
+COMMENT = r"\/\/"
 
 
 def do_in_dir(dir, cmd):
@@ -70,7 +69,7 @@ def create_problem():
     # generate test code with cargo leet
     do_in_dir(rust_dir, f"cargo leet gen {problem_name}")
     # trim the beginning of the file
-    os.system(f"ex -c '1,/^\/\/ {CODE_BELOW}/d' -cwq {cargoleet_path}")
+    os.system(f"ex -c '1,/^{COMMENT} {CODE_BELOW}/d' -cwq {cargoleet_path}")
     # append the rest of the file to the final file and delete it
     os.system(f"cat {cargoleet_path} >> {local_path}")
     os.system(f"rm {cargoleet_path}")
