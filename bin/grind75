@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
+""" work with grind75 problem set and leetcode-cli
+    grind75 is a list of leetcode problems that are considered good to grind
+    leetcode-cli is a command line tool to interact with leetcode
+    this script will print the grind75 problems and their status
+    if the first argument is 'next' it will print the first problem that is not checked
+    this is used mainly from my dsa.nvim plugin"""
 
 import os
 import sys
-from pprint import pprint
+from typing import List
 
-grind75 = [
+grind75: List[int] = [
     1,
     20,
     21,
@@ -190,6 +196,7 @@ leetcode_list = os.popen("leetcode list").read().split("\n")
         [  8 ] String to Integer (atoi)                                     Medium (17.01 %)
         [  9 ] Palindrome Number                                            Easy   (55.40 %)
         [ 10 ] Regular Expression Matching                                  Hard   (28.04 %)
+...
         [3017] Count the Number of Houses at a Certain Distance II          Hard   (17.02 %)
   🔒    [3018] Maximum Number of Removal Queries That Can Be Processed I    Hard   (52.27 %)
 
@@ -199,7 +206,6 @@ leetcode_list = os.popen("leetcode list").read().split("\n")
 
 """
 
-# we want a ditcionary of the form {1: { checked=True, name: "Two Sum", difficulty: "Easy", percent: 51.64} ...}
 leetcode_dict = {}
 for i in leetcode_list:
     if i:
@@ -218,12 +224,12 @@ for i in leetcode_list:
 
 
 # return first grind75 problem that is not checked if argeumnet is 'next'
-if len(os.sys.argv) > 1 and os.sys.argv[1] == "next":
-    for i in grind75:
-        entry = leetcode_dict[i]
+if len(sys.argv) > 1 and sys.argv[1] == "next":
+    for j in grind75:
+        entry = leetcode_dict[j]
         if not entry["checked"]:
-            print(i)
+            print(j)
             break
 else:
-    for i in grind75:
-        print(i, leetcode_dict[i])
+    for k in grind75:
+        print(k, leetcode_dict[k])
