@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+"""Python3 version of leetcode-cli wrapper"""
+# pylint: enable=useless-suppression
+# pylint: disable=missing-function-docstring
 
-# Python3 version of leetcode-cli wrapper
 
 import argparse
 import os
+import sys
 
 import leetopenlib
 
@@ -25,7 +28,7 @@ problem_name = leetopenlib.lookup_problem(problem_id)
 
 if problem_name is None:
     print(f"problem {problem_id} not found")
-    exit(1)
+    sys.exit(1)
 
 filename = f"{int(problem_id):04d}.{problem_name}.py"
 leetcode_path = f"{leetcode_path}/code/{problem_id}.{problem_name}.py"
@@ -39,7 +42,7 @@ leetcode_config_path = os.path.expanduser("~/.leetcode") + "/leetcode.toml"
 def create_problem():
     if os.path.exists(local_path) and not args.f:
         print(f"python/{filename} already exists")
-        exit(1)
+        sys.exit(1)
     if not os.path.exists(leetcode_python_config_path):
         os.system("cd ~/.leetcode && make")
     os.system(f"cp {leetcode_python_config_path} {leetcode_config_path}")
@@ -52,13 +55,13 @@ def create_problem():
 
 print(f"problem {problem_id} {problem_name} {args.subcommand}")
 
-if args.subcommand == "create" or args.subcommand == "c":
+if args.subcommand in ["create", "c"]:
     create_problem()
-elif args.subcommand == "test" or args.subcommand == "t":
+elif args.subcommand in ["test", "t"]:
     print(f"testing {filename}")
     os.system(f"cp {local_path} {leetcode_path}")
     os.system(f"leetcode test {problem_id}")
-elif args.subcommand == "submit" or args.subcommand == "x":
+elif args.subcommand in ["submit", "x"]:
     print(f"submitting {filename}")
     os.system(f"cp {local_path} {leetcode_path}")
     os.system(f"leetcode exec {problem_id}")
@@ -73,4 +76,4 @@ elif args.subcommand == "info":
     print(f"file: {filename}")
 else:
     print("unknown subcommand")
-    exit(1)
+    sys.exit(1)
