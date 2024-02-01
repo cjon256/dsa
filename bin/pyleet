@@ -26,6 +26,12 @@ args = argparser.parse_args()
 problem_id = args.problem
 problem_name = leetopenlib.lookup_problem(problem_id)
 
+PYLINT_DISABLES = """\
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+# pylint: disable=invalid-name, line-too-long, too-few-public-methods
+# pylint: enable=useless-suppression
+"""
+
 if problem_name is None:
     print(f"problem {problem_id} not found")
     sys.exit(1)
@@ -49,6 +55,8 @@ def create_problem():
     os.system(f"leetcode edit {problem_id}")
     os.system(f"mv {leetcode_path} {local_path}")
     os.system(r"gsed -i '/^    def /a\        pass' " + local_path)
+    for line in PYLINT_DISABLES.split("\n"):
+        os.system(f"gsed -i '/^#  Percent:/a \\{line}' {local_path}")
     os.system(f"cat {base_path}/lib/share/pyleet/test-block.py >> {local_path}")
     print(f"created python/{filename}")
 
