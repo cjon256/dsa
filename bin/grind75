@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+from pprint import pprint
+
+grind75 = [
+    1,
+    20,
+    21,
+    121,
+    125,
+    226,
+    242,
+    704,
+    733,
+    235,
+    110,
+    141,
+    232,
+    278,
+    383,
+    70,
+    409,
+    206,
+    169,
+    67,
+    543,
+    876,
+    104,
+    217,
+    252,
+    13,
+    844,
+    338,
+    100,
+    191,
+    14,
+    136,
+    234,
+    283,
+    101,
+    268,
+    9,
+    108,
+    190,
+    572,
+    977,
+    53,
+    57,
+    542,
+    973,
+    3,
+    15,
+    102,
+    133,
+    150,
+    207,
+    208,
+    322,
+    238,
+    155,
+    98,
+    200,
+    994,
+    33,
+    39,
+    46,
+    56,
+    236,
+    981,
+    721,
+    75,
+    139,
+    416,
+    8,
+    54,
+    78,
+    199,
+    5,
+    62,
+    105,
+    11,
+    17,
+    79,
+    438,
+    310,
+    621,
+    146,
+    230,
+    739,
+    198,
+    134,
+    31,
+    36,
+    49,
+    152,
+    211,
+    417,
+    19,
+    1730,
+    287,
+    692,
+    300,
+    261,
+    210,
+    24,
+    113,
+    128,
+    189,
+    328,
+    394,
+    525,
+    662,
+    658,
+    424,
+    285,
+    55,
+    2,
+    22,
+    148,
+    323,
+    1197,
+    560,
+    735,
+    528,
+    215,
+    221,
+    48,
+    103,
+    362,
+    437,
+    50,
+    74,
+    179,
+    91,
+    253,
+    7,
+    73,
+    143,
+    271,
+    787,
+    863,
+    16,
+    61,
+    153,
+    227,
+    377,
+    380,
+    435,
+    76,
+    297,
+    42,
+    295,
+    127,
+    224,
+    1235,
+    23,
+    84,
+    124,
+    895,
+    4,
+    329,
+    32,
+    588,
+    759,
+    212,
+    269,
+    815,
+    239,
+    336,
+    25,
+    37,
+    41,
+    51,
+    632,
+]
+
+# get the output of leetcode list
+leetcode_list = os.popen("leetcode list").read().split("\n")
+
+""" leetcode list now looks like this:
+      ✔ [  1 ] Two Sum                                                      Easy   (51.64 %)
+        [  2 ] Add Two Numbers                                              Medium (42.08 %)
+        [  3 ] Longest Substring Without Repeating Characters               Medium (34.39 %)
+        [  4 ] Median of Two Sorted Arrays                                  Hard   (39.07 %)
+        [  5 ] Longest Palindromic Substring                                Medium (33.51 %)
+        [  6 ] Zigzag Conversion                                            Medium (47.05 %)
+        [  7 ] Reverse Integer                                              Medium (28.25 %)
+        [  8 ] String to Integer (atoi)                                     Medium (17.01 %)
+        [  9 ] Palindrome Number                                            Easy   (55.40 %)
+        [ 10 ] Regular Expression Matching                                  Hard   (28.04 %)
+        [3017] Count the Number of Houses at a Certain Distance II          Hard   (17.02 %)
+  🔒    [3018] Maximum Number of Removal Queries That Can Be Processed I    Hard   (52.27 %)
+
+        Listed: 2936     Locked: 574      Starred: 0
+        Accept: 47       Not-Ac: 0        Remain:  2889
+        Easy  : 717      Medium: 1557     Hard:    662
+
+"""
+
+# we want a ditcionary of the form {1: { checked=True, name: "Two Sum", difficulty: "Easy", percent: 51.64} ...}
+leetcode_dict = {}
+for i in leetcode_list:
+    if i:
+        if "[" not in i:
+            continue
+        locked = "🔒" in i
+        checked = "✔" in i
+        number = i.split("[")[1].split("]")[0].strip()
+        entry = {
+            "line": i,
+            "checked": checked,
+            "locked": locked,
+            "number": number,
+        }
+        leetcode_dict[int(number)] = entry
+
+
+# return first grind75 problem that is not checked if argeumnet is 'next'
+if len(os.sys.argv) > 1 and os.sys.argv[1] == "next":
+    for i in grind75:
+        entry = leetcode_dict[i]
+        if not entry["checked"]:
+            print(i)
+            break
+else:
+    for i in grind75:
+        print(i, leetcode_dict[i])
