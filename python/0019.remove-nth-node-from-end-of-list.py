@@ -1,103 +1,118 @@
+#  Category: algorithms
+#  Level: Medium
+#  Percent: 43.63228%
+# pylint: enable=useless-suppression
+# pylint: disable=invalid-name, line-too-long, too-few-public-methods
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
+
+#  Given the head of a linked list, remove the nth node from the end of the list and return its head.
+#
+#
+#  Example 1:
+#
+#  Input: head = [1,2,3,4,5], n = 2
+#  Output: [1,2,3,5]
+#
+#
+#  Example 2:
+#
+#  Input: head = [1], n = 1
+#  Output: []
+#
+#
+#  Example 3:
+#
+#  Input: head = [1,2], n = 1
+#  Output: [1]
+#
+#
+#
+#  Constraints:
+#
+#
+#  	The number of nodes in the list is sz.
+#  	1 <= sz <= 30
+#  	0 <= Node.val <= 100
+#  	1 <= n <= sz
+#
+#
+#  Follow up: Could you do this in one pass?
+#
 # Definition for singly-linked list.
-from dataclasses import dataclass
-from typing import Optional, List, Any, Self
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
 import unittest
+from typing import Any, List, Optional
+
+from conversions import ListNode, linked_list_to_list, list_to_linked_list
 
 
-@dataclass
-class ListNode:
-    val: int = 0
-    next: Optional[Self] = None
-
-
+#  start_marker
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         if head is None:
             return None
         if head.next is None and n == 1:
             return None
-        curr = head
+        curr: Any = head
         for _ in range(n):
-            print(f"curr: {curr.val}")
-            print("----------------------")
             curr = curr.next
         if curr is None:
             return head.next
-        print(f"head: {head.val} curr: {curr.val}")
-        print("----------------------")
-        print("----------------------")
-        curr_minus_n = head
+        curr_minus_n: Any = head
         while curr.next:
-            print(f"curr_minus_n: {curr_minus_n.val} ... curr: {curr.val}")
-            print("----------------------")
             curr = curr.next
             curr_minus_n = curr_minus_n.next
-        print(f"done: curr_minus_n: {curr_minus_n.val} ... curr: {curr.val}")
         curr_minus_n.next = curr_minus_n.next.next
         return head
 
 
-def constructTreeTestAndReturnList(nums: List[Any], n: int) -> List[Any]:
-    head = ListNode(nums[0])
-    curr = head
-    for i in range(1, len(nums)):
-        curr.next = ListNode(nums[i])
-        curr = curr.next
-    head = Solution().removeNthFromEnd(head, n)
-    print(f"head after: {head}")
-    result = []
-    curr = head
-    while curr:
-        result.append(curr.val)
-        curr = curr.next
-    return result
-
-
-class TestSolution:  # (unittest.TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
+#  end_marker
+class TestSolution(unittest.TestCase):
     def test_1(self) -> None:
-        # Input: head = [1,2,3,4,5], n = 2
-        # Output: [1,2,3,5]
-        nums = [1, 2, 3, 4, 5]
+        head = list_to_linked_list([1, 2, 3, 4, 5])
         n = 2
-        print("==================================")
-        print(f"running test_1: {nums}, {n}")
-        print("==================================")
-        # self.assertEqual(constructTreeTestAndReturnList(nums, n), [1, 2, 3, 5])
-        nums = constructTreeTestAndReturnList(nums, n)
-        print(nums)
+        expected = [1, 2, 3, 5]
+        self.assertEqual(
+            linked_list_to_list(Solution().removeNthFromEnd(head, n)), expected
+        )
 
     def test_2(self) -> None:
-        # Input: head = [1], n = 1
-        # Output: []
-        nums = [1]
+        head = list_to_linked_list([1])
         n = 1
-        print("==================================")
-        print(f"running test_2: {nums}, {n}")
-        print("==================================")
-        # self.assertEqual(constructTreeTestAndReturnList(nums, n), [])
-        nums = constructTreeTestAndReturnList(nums, n)
-        print(nums)
+        expected: List = []
+        self.assertEqual(
+            linked_list_to_list(Solution().removeNthFromEnd(head, n)), expected
+        )
 
     def test_3(self) -> None:
-        # Input: head = [1,2], n = 1
-        # Output: [1]
-        nums = [1, 2]
+        head = list_to_linked_list([1, 2])
+        n = 1
+        expected = [1]
+        self.assertEqual(
+            linked_list_to_list(Solution().removeNthFromEnd(head, n)), expected
+        )
+
+    def test_4(self) -> None:
+        head = list_to_linked_list([1, 2])
         n = 2
-        print("==================================")
-        print(f"running test_3: {nums}, {n}")
-        print("==================================")
-        # self.assertEqual(constructTreeTestAndReturnList(nums, n), [2])
-        nums = constructTreeTestAndReturnList(nums, n)
-        print(nums)
+        expected = [2]
+        self.assertEqual(
+            linked_list_to_list(Solution().removeNthFromEnd(head, n)), expected
+        )
+
+    def test_5(self) -> None:
+        head = list_to_linked_list([1, 2, 3])
+        n = 3
+        expected = [2, 3]
+        self.assertEqual(
+            linked_list_to_list(Solution().removeNthFromEnd(head, n)), expected
+        )
 
 
-if __name__ == '__main__':
-    # unittest.main()
-    ts = TestSolution()
-    ts.test_1()
-    ts.test_2()
-    ts.test_3()
+if __name__ == "__main__":
+    unittest.main()
