@@ -59,6 +59,37 @@ class Solution:
         self, intervals: List[List[int]], newInterval: List[int]
     ) -> List[List[int]]:
         result = []
+        new_interval_start, new_interval_end = newInterval
+        idx = 0
+        # add any non-overlapping intervals before
+        while idx < len(intervals):
+            curr_end = intervals[idx][1]
+            if new_interval_start <= curr_end:
+                break
+            curr = intervals[idx]
+            result.append(curr)
+            idx += 1
+
+        # merge overlapping intervals
+        while idx < len(intervals):
+            curr_start, curr_end = intervals[idx]
+            if new_interval_end < curr_start:
+                break
+            new_interval_start = min(new_interval_start, curr_start)
+            new_interval_end = max(new_interval_end, curr_end)
+            idx += 1
+        # add the combination
+        result.append([new_interval_start, new_interval_end])
+
+        # add non-overlapping intervals after
+        result.extend(intervals[idx:])
+        return result
+        #  end_marker
+
+    def insert_messy2(
+        self, intervals: List[List[int]], newInterval: List[int]
+    ) -> List[List[int]]:
+        result = []
         new_start, new_end = newInterval
         if not intervals or (
             new_start <= intervals[0][0] and new_end >= intervals[-1][1]
@@ -85,7 +116,6 @@ class Solution:
             result.append([new_start, new_end])
         return result
 
-    #  end_marker
     def insert_messy(
         self, intervals: List[List[int]], newInterval: List[int]
     ) -> List[List[int]]:
