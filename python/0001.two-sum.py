@@ -1,6 +1,11 @@
 #  Category: algorithms
 #  Level: Easy
 #  Percent: 51.64373%
+# pylint: enable=useless-suppression
+# pylint: disable=missing-module-docstring, missing-function-docstring, missing-class-docstring
+# pylint: disable=invalid-name, line-too-long, too-few-public-methods
+
+
 #  Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
 #
 #  You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -42,18 +47,19 @@
 import unittest
 
 #  start_marker
-from typing import List
+from typing import Any, Dict, List
 
 
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        num_to_idx = {}
+        num_to_idx: Dict[int, Any] = {}
 
         for idx, n in enumerate(nums):
             difference = target - n
-            if (difference) in num_to_idx:
+            if difference in num_to_idx:
                 return [num_to_idx[difference], idx]
             num_to_idx[n] = idx
+        return []
 
 
 #  end_marker
