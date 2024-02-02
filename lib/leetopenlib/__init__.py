@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+# pylint: disable=too-many-lines
 leetcode_problems_dict = {
     "1": "two-sum",
     "2": "add-two-numbers",
