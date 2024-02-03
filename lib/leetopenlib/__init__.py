@@ -1287,7 +1287,7 @@ leetcode_problems_dict = {
     "1284": "minimum-number-of-flips-to-convert-binary-matrix...",
     "1285": "find-the-start-and-end-number-of-continuous-ranges",
     "1286": "iterator-for-combination",
-    "1287": "element-appearing-more-than-25%-in-sorted-array",
+    "1287": "element-appearing-more-than-25-in-sorted-array",
     "1288": "remove-covered-intervals",
     "1289": "minimum-falling-path-sum-ii",
     "1290": "convert-binary-number-in-a-linked-list-to-integer",
