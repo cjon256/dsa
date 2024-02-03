@@ -38,37 +38,33 @@
 
 
 import unittest
-
-# from conversions import ListNode, linked_list_to_list, list_to_linked_list
-# from conversions import liststr_to_tree, treenode_to_liststr, TreeNode
 from typing import List
+
+from _0542_01_matrix_dat import TEST_6_MAT, TEST_6_RES, TEST_9_MAT, TEST_9_RES
 
 
 #  start_marker
 class Solution:
     def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
-        def get_all_n_dist(i, j, n):
-            for vert in range(max(0, i - n), min(len(mat), i + n + 1)):
-                horz1 = n - abs(vert - i)
-                if j + horz1 < len(mat[0]):
-                    yield (vert, j + horz1)
-                if j - horz1 >= 0:
-                    yield (vert, j - horz1)
-
-        def distance_to_nearest_zero(i, j):
-            for n in range(1, (len(mat) + len(mat[0]) + 1)):
-                for vert, horz in get_all_n_dist(i, j, n):
-                    if mat[vert][horz] == 0:
-                        return n
-            return float("inf")
-
-        retval = [[0 for _ in range(len(mat[0]))] for _ in range(len(mat))]
+        MAX_INT = 10**14
         for i in range(len(mat)):
             for j in range(len(mat[0])):
-                if mat[i][j] == 1:
-                    retval[i][j] = distance_to_nearest_zero(i, j)
-        return retval
-        #  end_marker
+                if mat[i][j] != 0:
+                    mat[i][j] = MAX_INT
+            for j in range(1, len(mat[0])):
+                if mat[i][j] != 0:
+                    mat[i][j] = min(mat[i][j], mat[i][j - 1] + 1)
+            for j in range(len(mat[0]) - 2, -1, -1):
+                if mat[i][j] != 0:
+                    mat[i][j] = min(mat[i][j], mat[i][j + 1] + 1)
+
+        for j in range(len(mat[0])):
+            for i in range(1, len(mat)):
+                mat[i][j] = min(mat[i][j], mat[i - 1][j] + 1)
+            for i in range(len(mat) - 2, -1, -1):
+                mat[i][j] = min(mat[i][j], mat[i + 1][j] + 1)
+        return mat
+        # end_marker
 
 
 class TestSolution(unittest.TestCase):
@@ -95,6 +91,26 @@ class TestSolution(unittest.TestCase):
     def test_case_5(self):
         mat = [[1, 1, 1], [1, 0, 1], [1, 1, 1]]
         result = [[2, 1, 2], [1, 0, 1], [2, 1, 2]]
+        self.assertEqual(Solution().updateMatrix(mat), result)
+
+    def test_case_6(self):
+        mat = TEST_6_MAT
+        result = TEST_6_RES
+        self.assertEqual(Solution().updateMatrix(mat), result)
+
+    def test_case_7(self):
+        mat = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        result = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.assertEqual(Solution().updateMatrix(mat), result)
+
+    def test_case_8(self):
+        mat = [[0], [0], [0], [0], [0]]
+        result = [[0], [0], [0], [0], [0]]
+        self.assertEqual(Solution().updateMatrix(mat), result)
+
+    def test_case_9(self):
+        mat = TEST_9_MAT
+        result = TEST_9_RES
         self.assertEqual(Solution().updateMatrix(mat), result)
 
 
