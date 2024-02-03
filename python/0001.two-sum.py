@@ -45,14 +45,13 @@
 #
 #  Follow-up: Can you come up with an algorithm that is less than O(n²) time complexity?
 import unittest
-
 #  start_marker
-from typing import Any, Dict, List
+from typing import Dict, List
 
 
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        num_to_idx: Dict[int, Any] = {}
+        num_to_idx: Dict[int, int] = {}
 
         for idx, n in enumerate(nums):
             difference = target - n
