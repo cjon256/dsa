@@ -45,6 +45,7 @@
 #  	-10⁵ <= nums[i] <= 10⁵
 #
 
+import pickle
 import unittest
 from collections import Counter
 from itertools import combinations
@@ -197,10 +198,10 @@ class TestSolution(unittest.TestCase):
         )
 
     def test_case_9(self):
-        import _0015_3sum
-
-        nums = _0015_3sum.TEST_CASE_9
-        expected = _0015_3sum.TEST_CASE_9_EXPECTED
+        with open("data/0015_3sum_test_case_9_input.pkl", "rb") as f:
+            nums = pickle.load(f)
+        with open("data/0015_3sum_test_case_9_output.pkl", "rb") as f:
+            expected = pickle.loads(f)
         self.assertTrue(
             order_independent_comparison_of_lists_of_lists(
                 Solution().threeSum(nums), expected
