@@ -46,6 +46,8 @@
 #
 
 import unittest
+from collections import Counter
+from itertools import combinations
 
 #  start_marker
 from typing import List
@@ -53,6 +55,34 @@ from typing import List
 
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
+        if len(nums) < 3:
+            return []
+        triplets = []
+        nums_counter = Counter(nums)
+        all_pairs = combinations(nums, 2)
+        for a, b in all_pairs:
+            c = -(a + b)
+            triplet = sorted([a, b, c])
+            if c in nums_counter:
+                if triplet in triplets:
+                    continue
+                if a == c:
+                    if b == c:
+                        if nums_counter[c] > 2:
+                            triplets.append(triplet)
+                    elif nums_counter[c] > 1:
+                        triplets.append(triplet)
+                elif b == c:
+                    if nums_counter[c] > 1:
+                        triplets.append(triplet)
+                else:
+                    triplets.append(triplet)
+        return triplets
+        #  end_marker
+
+
+class OldSolution:
+    def threeSum_slowwww(self, nums: List[int]) -> List[List[int]]:
         if len(nums) < 3:
             return []
         triplets = []
@@ -82,7 +112,6 @@ class Solution:
                     right -= 1
             i += 1
         return triplets
-        #  end_marker
 
 
 def order_independent_comparison_of_lists_of_lists(a, b):
