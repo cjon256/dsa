@@ -59,13 +59,15 @@ class Solution:
             return []
         triplets = []
         nums_counter = Counter(nums)
+        triplets_seen = set()
         all_pairs = combinations(nums, 2)
         for a, b in all_pairs:
             c = -(a + b)
             triplet = sorted([a, b, c])
             if c in nums_counter:
-                if triplet in triplets:
+                if f"{triplet}" in triplets_seen:
                     continue
+                triplets_seen.add(f"{triplet}")
                 if a == c:
                     if b == c:
                         if nums_counter[c] > 2:
@@ -115,6 +117,7 @@ class OldSolution:
 
 
 def order_independent_comparison_of_lists_of_lists(a, b):
+    print(a)
     sa = sorted([sorted(x) for x in a])
     sb = sorted([sorted(x) for x in b])
     return sa == sb
@@ -187,6 +190,17 @@ class TestSolution(unittest.TestCase):
     def test_case_8(self):
         nums = [-2, -3, 0, 1, 2, -1, 3]
         expected = [[-3, 1, 2], [-2, 0, 2], [-2, -1, 3], [-3, 0, 3], [-1, 0, 1]]
+        self.assertTrue(
+            order_independent_comparison_of_lists_of_lists(
+                Solution().threeSum(nums), expected
+            )
+        )
+
+    def test_case_9(self):
+        import _0015_3sum
+
+        nums = _0015_3sum.TEST_CASE_9
+        expected = _0015_3sum.TEST_CASE_9_EXPECTED
         self.assertTrue(
             order_independent_comparison_of_lists_of_lists(
                 Solution().threeSum(nums), expected
