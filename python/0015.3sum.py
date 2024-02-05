@@ -49,53 +49,57 @@ import pickle
 import unittest
 from collections import Counter
 from itertools import combinations
-from typing import List
+from typing import List, Set
 
 
 #  start_marker
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
+        def triplet_append(a: int, b: int, c: int) -> None:
+            """Append ordered triplet only if not seen before."""
+            triplet = sorted([a, b, c])
+            # not doing tuple(triplet) because makes typecheckers unhappy
+            triple_tuple = (triplet[0], triplet[1], triplet[2])
+            if triple_tuple not in triplets_seen_cache:
+                triplets.append(triplet)
+                triplets_seen_cache.add(triple_tuple)
+
         if len(nums) < 3:
             return []
-        triplets = []
+
+        triplets: List[List[int]] = []
+        pos_nums: List[int] = []
+        neg_nums: List[int] = []
         zero_count = 0
-        pos_nums = []
-        neg_nums = []
-        pos_set = set()
-        neg_set = set()
-        triplets_seen = set()
+        nums_cache: Set[int] = set()
+        triplets_seen_cache: Set[tuple[int, int, int]] = set()
         for num in nums:
             if num == 0:
                 zero_count += 1
             elif num > 0:
                 pos_nums.append(num)
-                pos_set.add(num)
+                nums_cache.add(num)
             else:
                 neg_nums.append(num)
-                neg_set.add(num)
-
-        def triplet_append(triplet):
-            triplet.sort()
-            if tuple(triplet) not in triplets_seen:
-                triplets.append(triplet)
-                triplets_seen.add(tuple(triplet))
+                nums_cache.add(num)
 
         if zero_count > 2:
-            triplet_append([0, 0, 0])
+            triplets.append([0, 0, 0])
 
         if zero_count > 0:
-            for num in pos_set:
-                if -num in neg_set:
-                    triplet_append([-num, 0, num])
+            for num in nums_cache:
+                if -num in nums_cache:
+                    triplet_append(-num, 0, num)
+
         for a, b in combinations(pos_nums, 2):
             c = -(a + b)
-            if c in neg_set:
-                triplet_append([a, b, c])
+            if c in nums_cache:
+                triplet_append(a, b, c)
 
         for a, b in combinations(neg_nums, 2):
             c = -(a + b)
-            if c in pos_set:
-                triplet_append([a, b, c])
+            if c in nums_cache:
+                triplet_append(a, b, c)
 
         return triplets
         # end_marker
@@ -268,7 +272,6 @@ class TestSolution(unittest.TestCase):
             [-1, -1, 2],
             [-1, 0, 1],
         ]
-        print(Solution().threeSum(nums))
         self.assertTrue(
             order_independent_comparison_of_lists_of_lists(
                 Solution().threeSum(nums), expected
