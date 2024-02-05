@@ -49,7 +49,6 @@ import pickle
 import unittest
 from collections import Counter
 from itertools import combinations
-
 #  start_marker
 from typing import List
 
@@ -117,7 +116,7 @@ class OldSolution:
         return triplets
 
 
-def order_independent_comparison_of_lists_of_lists(a, b):
+def order_independent_comparison_of_lists_of_lists(a: List[List[int]], b: List[List[int]]) -> bool:
     print(a)
     sa = sorted([sorted(x) for x in a])
     sb = sorted([sorted(x) for x in b])
