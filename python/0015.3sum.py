@@ -49,12 +49,60 @@ import pickle
 import unittest
 from collections import Counter
 from itertools import combinations
-#  start_marker
 from typing import List
 
 
+#  start_marker
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
+        if len(nums) < 3:
+            return []
+        triplets = []
+        zero_count = 0
+        pos_nums = []
+        neg_nums = []
+        pos_set = set()
+        neg_set = set()
+        triplets_seen = set()
+        for num in nums:
+            if num == 0:
+                zero_count += 1
+            elif num > 0:
+                pos_nums.append(num)
+                pos_set.add(num)
+            else:
+                neg_nums.append(num)
+                neg_set.add(num)
+
+        def triplet_append(triplet):
+            triplet.sort()
+            if tuple(triplet) not in triplets_seen:
+                triplets.append(triplet)
+                triplets_seen.add(tuple(triplet))
+
+        if zero_count > 2:
+            triplet_append([0, 0, 0])
+
+        if zero_count > 0:
+            for num in pos_set:
+                if -num in neg_set:
+                    triplet_append([-num, 0, num])
+        for a, b in combinations(pos_nums, 2):
+            c = -(a + b)
+            if c in neg_set:
+                triplet_append([a, b, c])
+
+        for a, b in combinations(neg_nums, 2):
+            c = -(a + b)
+            if c in pos_set:
+                triplet_append([a, b, c])
+
+        return triplets
+        # end_marker
+
+
+class OldSolution:
+    def threeSum_third_try(self, nums: List[int]) -> List[List[int]]:
         if len(nums) < 3:
             return []
         triplets = []
@@ -80,10 +128,7 @@ class Solution:
                 else:
                     triplets.append(triplet)
         return triplets
-        #  end_marker
 
-
-class OldSolution:
     def threeSum_slowwww(self, nums: List[int]) -> List[List[int]]:
         if len(nums) < 3:
             return []
@@ -116,8 +161,11 @@ class OldSolution:
         return triplets
 
 
-def order_independent_comparison_of_lists_of_lists(a: List[List[int]], b: List[List[int]]) -> bool:
-    print(a)
+def order_independent_comparison_of_lists_of_lists(
+    a: List[List[int]], b: List[List[int]]
+) -> bool:
+    if len(a) != len(b):
+        return False
     sa = sorted([sorted(x) for x in a])
     sb = sorted([sorted(x) for x in b])
     return sa == sb
@@ -200,7 +248,27 @@ class TestSolution(unittest.TestCase):
         with open("data/0015_3sum_test_case_9_input.pkl", "rb") as f:
             nums = pickle.load(f)
         with open("data/0015_3sum_test_case_9_output.pkl", "rb") as f:
-            expected = pickle.loads(f)
+            expected = pickle.load(f)
+        self.assertTrue(
+            order_independent_comparison_of_lists_of_lists(
+                Solution().threeSum(nums), expected
+            )
+        )
+
+    def test_case_10(self):
+        nums = [-1, 0, 1, 2, -1, -4, -2, -3, 3, 0, 4]
+        expected = [
+            [-4, 0, 4],
+            [-4, 1, 3],
+            [-3, -1, 4],
+            [-3, 0, 3],
+            [-3, 1, 2],
+            [-2, -1, 3],
+            [-2, 0, 2],
+            [-1, -1, 2],
+            [-1, 0, 1],
+        ]
+        print(Solution().threeSum(nums))
         self.assertTrue(
             order_independent_comparison_of_lists_of_lists(
                 Solution().threeSum(nums), expected
