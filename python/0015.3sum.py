@@ -71,34 +71,38 @@ class Solution:
         pos_nums: List[int] = []
         neg_nums: List[int] = []
         zero_count = 0
-        nums_cache: Set[int] = set()
+        pos_nums_cache: Set[int] = set()
+        neg_nums_cache: Set[int] = set()
         triplets_seen_cache: Set[tuple[int, int, int]] = set()
         for num in nums:
             if num == 0:
                 zero_count += 1
             elif num > 0:
                 pos_nums.append(num)
-                nums_cache.add(num)
+                pos_nums_cache.add(num)
             else:
                 neg_nums.append(num)
-                nums_cache.add(num)
+                neg_nums_cache.add(num)
 
         if zero_count > 2:
             triplets.append([0, 0, 0])
 
+        if not pos_nums or not neg_nums:
+            return triplets
+
         if zero_count > 0:
-            for num in nums_cache:
-                if -num in nums_cache:
+            for num in pos_nums_cache:
+                if -num in neg_nums_cache:
                     triplet_append(-num, 0, num)
 
         for a, b in combinations(pos_nums, 2):
             c = -(a + b)
-            if c in nums_cache:
+            if c in neg_nums_cache:
                 triplet_append(a, b, c)
 
         for a, b in combinations(neg_nums, 2):
             c = -(a + b)
-            if c in nums_cache:
+            if c in pos_nums_cache:
                 triplet_append(a, b, c)
 
         return triplets
