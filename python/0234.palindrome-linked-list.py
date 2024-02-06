@@ -38,7 +38,7 @@
 import unittest
 from typing import Optional
 
-from conversions import ListNode, list_to_linked_list
+from leetopenlib.linked_list import ListNode, list_to_linked_list
 
 
 #  start_marker

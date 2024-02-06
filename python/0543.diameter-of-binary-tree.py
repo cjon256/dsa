@@ -38,7 +38,7 @@ import unittest
 from dataclasses import dataclass
 from typing import Optional
 
-from conversions import liststr_to_tree
+from leetopenlib.tree import liststr_to_tree
 
 
 @dataclass

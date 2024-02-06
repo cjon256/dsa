@@ -4,7 +4,7 @@
 import unittest
 from typing import Optional
 
-from conversions import ListNode, linked_list_to_list, list_to_linked_list
+from leetopenlib.linked_list import ListNode, linked_list_to_list, list_to_linked_list
 
 #  You are given the heads of two sorted linked lists list1 and list2.
 #

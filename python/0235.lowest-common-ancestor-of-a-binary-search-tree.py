@@ -46,7 +46,7 @@
 #         self.right = None
 import unittest
 
-from conversions import TreeNode, liststr_to_tree
+from leetopenlib.tree import TreeNode, liststr_to_tree
 
 
 #  start_marker

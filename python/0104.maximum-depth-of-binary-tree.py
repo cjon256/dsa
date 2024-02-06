@@ -6,7 +6,7 @@
 import unittest
 from typing import Optional, Self
 
-from conversions import TreeNode, liststr_to_tree
+from leetopenlib.tree import TreeNode, liststr_to_tree
 
 #  Given the root of a binary tree, return its maximum depth.
 #

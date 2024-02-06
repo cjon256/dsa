@@ -35,7 +35,7 @@
 import unittest
 from typing import Optional
 
-from conversions import TreeNode, liststr_to_tree
+from leetopenlib.tree import TreeNode, liststr_to_tree
 
 
 #  start_marker

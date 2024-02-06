@@ -39,17 +39,9 @@
 
 
 import unittest
-from dataclasses import dataclass
 from typing import Optional, Tuple
 
-from conversions import liststr_to_tree
-
-
-@dataclass
-class TreeNode:
-    val: int
-    left: Optional["TreeNode"] = None
-    right: Optional["TreeNode"] = None
+from leetopenlib.tree import TreeNode, liststr_to_tree
 
 
 #  start_marker

@@ -40,7 +40,7 @@
 import unittest
 from typing import List, Optional
 
-from conversions import TreeNode, tree_to_liststr
+from leetopenlib.tree import TreeNode, tree_to_liststr
 
 
 #  start_marker

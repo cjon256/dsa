@@ -4,7 +4,7 @@ import unittest
 from dataclasses import dataclass
 from typing import Optional, Self
 
-from conversions import linked_list_to_list, list_to_linked_list
+from leetopenlib.linked_list import linked_list_to_list, list_to_linked_list
 
 
 @dataclass

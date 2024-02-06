@@ -7,7 +7,7 @@
 import unittest
 from typing import Optional, Self
 
-from conversions import ListNode, linked_list_to_list, list_to_linked_list
+from leetopenlib.linked_list import ListNode, linked_list_to_list, list_to_linked_list
 
 #  Given the head of a singly linked list, return the middle node of the linked list.
 #
