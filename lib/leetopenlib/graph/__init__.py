@@ -1,3 +1,4 @@
+import unittest
 from collections import deque
 from dataclasses import dataclass, field
 from typing import List, Optional
@@ -35,3 +36,18 @@ def adj_list_to_graph(adj_list: List[List[int]]) -> Optional[Node]:
         for neighbor in neighbors:
             node.neighbors.append(nodes[neighbor - 1])
     return nodes[0]
+
+
+class TestNode(unittest.TestCase):
+    def test_graph_to_adj_list(self):
+        node = Node(1, [Node(2), Node(3)])
+        self.assertEqual(graph_to_adj_list(node), [[2, 3], [], []])
+
+    def test_adj_list_to_graph(self):
+        adj_list = [[2, 3], [], []]
+        node = Node(1, [Node(2), Node(3)])
+        self.assertEqual(adj_list_to_graph(adj_list), node)
+
+
+if __name__ == "__main__":
+    unittest.main()

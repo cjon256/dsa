@@ -2,7 +2,7 @@
 # pylint: disable=too-few-public-methods, protected-access, too-many-locals
 import unittest
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional, Tuple, Union
 
 
 @dataclass
@@ -11,13 +11,14 @@ class TreeNode:
     left: Optional["TreeNode"] = None
     right: Optional["TreeNode"] = None
 
-    # from https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
-    def display(self):
-        lines, *_ = self._display_aux()
-        for line in lines:
-            print(line)
+    def __iter__(self):
+        yield self.val
+        if self.left:
+            yield from self.left
+        if self.right:
+            yield from self.right
 
-    def _display_aux(self):
+    def _display_aux(self) -> Tuple[List[str], int, int, int]:
         """Returns list of strings, width, height, and horizontal coordinate of the root."""
         # No child.
         if self.right is None and self.left is None:
@@ -28,7 +29,7 @@ class TreeNode:
             return [line], width, height, middle
 
         # Only left child.
-        if self.right is None:
+        if self.right is None and self.left is not None:
             lines, n, p, x = self.left._display_aux()
             s = f"{self.val}"
             u = len(s)
@@ -38,7 +39,7 @@ class TreeNode:
             return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
 
         # Only right child.
-        if self.left is None:
+        if self.left is None and self.right is not None:
             lines, n, p, x = self.right._display_aux()
             s = f"{self.val}"
             u = len(s)
@@ -47,28 +48,33 @@ class TreeNode:
             shifted_lines = [u * " " + line for line in lines]
             return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
 
-        # Two children.
-        left, n, p, x = self.left._display_aux()
-        right, m, q, y = self.right._display_aux()
-        s = f"{self.val}"
-        u = len(s)
-        first_line = (x + 1) * " " + (n - x - 1) * "_" + s + y * "_" + (m - y) * " "
-        second_line = (
-            x * " " + "/" + (n - x - 1 + u + y) * " " + "\\" + (m - y - 1) * " "
-        )
-        if p < q:
-            left += [n * " "] * (q - p)
-        elif q < p:
-            right += [m * " "] * (p - q)
-        zipped_lines = zip(left, right)
-        lines = [first_line, second_line] + [a + u * " " + b for a, b in zipped_lines]
-        return lines, n + m + u, max(p, q) + 2, n + u // 2
+        # Only need the check to make type checker happy...
+        if self.left is not None and self.right is not None:
+            # Two children.
+            left, n, p, x = self.left._display_aux()
+            right, m, q, y = self.right._display_aux()
+            s = f"{self.val}"
+            u = len(s)
+            first_line = (x + 1) * " " + (n - x - 1) * "_" + s + y * "_" + (m - y) * " "
+            second_line = (
+                x * " " + "/" + (n - x - 1 + u + y) * " " + "\\" + (m - y - 1) * " "
+            )
+            if p < q:
+                left += [n * " "] * (q - p)
+            elif q < p:
+                right += [m * " "] * (p - q)
+            zipped_lines = zip(left, right)
+            lines = [first_line, second_line] + [
+                a + u * " " + b for a, b in zipped_lines
+            ]
+            return lines, n + m + u, max(p, q) + 2, n + u // 2
+        return [], 0, 0, 0
 
-
-@dataclass
-class ListNode:
-    val: int
-    next: Optional["ListNode"] = None
+    # from https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
+    def display(self) -> None:
+        lines, _, _, _ = self._display_aux()
+        for line in lines:
+            print(line)
 
 
 # pylint: disable-next=line-too-long
@@ -124,26 +130,46 @@ def pretty_print_tree(root: TreeNode) -> None:
     print()
 
 
-def list_to_linked_list(list_):
-    if not list_:
+def list_to_tree(lis: List[Optional[int]]) -> Optional[TreeNode]:
+    if not lis or lis[0] is None:
         return None
-    head = ListNode(list_[0])
-    node = head
-    for i in list_[1:]:
-        node.next = ListNode(i)
-        node = node.next
-    return head
+    root = TreeNode(lis[0])
+    queue = [root]
+    i = 1
+    while i < len(lis):
+        node = queue.pop(0)
+        left = lis[i]
+        if left is not None:
+            node.left = TreeNode(left)
+            queue.append(node.left)
+        i += 1
+        right = lis[i]
+        if i < len(lis) and right is not None:
+            node.right = TreeNode(right)
+            queue.append(node.right)
+        i += 1
+    return root
 
 
-def linked_list_to_list(head):
-    if not head:
+optional_int = Union[int, None]
+
+
+def tree_to_list(root: TreeNode) -> List[optional_int]:
+    if not root:
         return []
-    list_ = []
-    node = head
-    while node:
-        list_.append(node.val)
-        node = node.next
-    return list_
+    queue: List[Optional[TreeNode]] = [root]
+    lis: List[optional_int] = []
+    while queue:
+        node = queue.pop(0)
+        if node:
+            lis.append(node.val)
+            queue.append(node.left)
+            queue.append(node.right)
+        else:
+            lis.append(None)
+    while lis[-1] is None:
+        lis.pop()
+    return lis
 
 
 class TestSerDeTree(unittest.TestCase):
@@ -159,19 +185,22 @@ class TestSerDeTree(unittest.TestCase):
         root = liststr_to_tree("[1,2,3,null,null,4,null,null,5]")
         self.assertEqual(tree_to_liststr(root), "[1,2,3,null,null,4,null,null,5]")
 
+    def test_case_4(self):
+        root = list_to_tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+        assert root is not None
+        self.assertEqual(
+            tree_to_list(root), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        )
 
-class TestSerdeList(unittest.TestCase):
-    def test_case_1(self):
-        lst = [1, 2, 3, 4, 5]
-        self.assertEqual(linked_list_to_list(list_to_linked_list(lst)), lst)
+    def test_case_5(self):
+        root = list_to_tree([1, 2, 3, None, None, 4, 5])
+        assert root is not None
+        self.assertEqual(tree_to_list(root), [1, 2, 3, None, None, 4, 5])
 
-    def test_case_2(self):
-        lst = []
-        self.assertEqual(linked_list_to_list(list_to_linked_list(lst)), lst)
-
-    def test_case_3(self):
-        lst = [1]
-        self.assertEqual(linked_list_to_list(list_to_linked_list(lst)), lst)
+    def test_case_6(self):
+        root = list_to_tree([1, 2, 3, None, None, 4, None, None, 5])
+        assert root is not None
+        self.assertEqual(tree_to_list(root), [1, 2, 3, None, None, 4, None, None, 5])
 
 
 if __name__ == "__main__":
