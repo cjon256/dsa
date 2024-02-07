@@ -97,7 +97,7 @@ def liststr_to_tree(string):
     return root
 
 
-def tree_to_liststr(root):
+def tree_to_liststr(root: Optional[TreeNode]) -> str:
     if not root:
         return "[]"
     result = []
@@ -154,7 +154,7 @@ def list_to_tree(lis: List[Optional[int]]) -> Optional[TreeNode]:
 optional_int = Union[int, None]
 
 
-def tree_to_list(root: TreeNode) -> List[optional_int]:
+def tree_to_list(root: Optional[TreeNode]) -> List[optional_int]:
     if not root:
         return []
     queue: List[Optional[TreeNode]] = [root]
