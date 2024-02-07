@@ -2,3 +2,5 @@
 lang = 'golang'
 # comment syntax
 comment_leading = "// "
+test = false
+
