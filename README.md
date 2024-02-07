@@ -8,7 +8,7 @@ My workflow for doing leetcode problems uses the following tools:
 
 - [leetcode-cli](https://github.com/clearloop/leetcode-cli)
 
-```
+```bash
 $ cargo install leetcode-cli
 $ leetcode data -u
 ```
@@ -17,7 +17,7 @@ $ leetcode data -u
 
 - [cargo-leet](https://github.com/rust-practice/cargo-leet)
 
-```shell
+```bash
 cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop --features=tool
 ```
 
@@ -25,7 +25,7 @@ cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop -
 
 - [gotests](https://github.com/cweill/gotests)
 
-```
+```bash
 go install github.com/cweill/gotests/gotests@latest
 ```
 
@@ -34,8 +34,13 @@ go install github.com/cweill/gotests/gotests@latest
 - [dsa.nvim](https://github.com/cjon256/dsa.nvim)
   Install using lazy.nvim:
 
-```
-{ "cjon256/dsa.nvim", config = function() require("dsa").setup() end }
+```lua
+    {
+        'cjon256/dsa.nvim',
+        config = function()
+            require('dsa').setup()
+        end,
+    }
 ```
 
 This on having this repo and having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
