@@ -17,8 +17,8 @@ $ leetcode data -u
 
 - [cargo-leet](https://github.com/rust-practice/cargo-leet)
 
-```
-$ cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop --features=tool
+```shell
+cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop --features=tool
 ```
 
 ## Go Testing code generation:
@@ -26,7 +26,7 @@ $ cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop
 - [gotests](https://github.com/cweill/gotests)
 
 ```
-$ go install github.com/cweill/gotests/gotests@latest
+go install github.com/cweill/gotests/gotests@latest
 ```
 
 ## My own dsa.nvim plugin:
