@@ -1,8 +1,20 @@
 # Data Structures and Algorithms
 
-This is used to play around on leet code and the like. First in Python, then likely in Rust, Go or other languages.
+This is used to provide an easy nvim based workflow in Pyton. Rust and Go to grind on leet code.
 
-My workflow for doing leetcode problems uses the following tools:
+The Python portion of this is very much the most developed. The Rust and Go portions still need to be fleshed out. Mostly because that reflects my skill level in those languages.
+
+## Commands
+
+The following commands are available:
+
+- pyleet
+- rsleet
+- goleet
+
+These are just thin wrappers around the tools above to enable a consistent workflow and decent tests for the problems in the three languages.
+
+The workflow for doing leetcode problems requires setting up the following tools:
 
 ## Basic code loop (base code generation, testing, and submission):
 
@@ -10,6 +22,11 @@ My workflow for doing leetcode problems uses the following tools:
 
 ```bash
 cargo install leetcode-cli
+```
+
+Need to upadate the database before using any of this.
+
+```bash
 leetcode data -u
 ```
 
@@ -48,19 +65,19 @@ Install using lazy.nvim:
 
 This nvim plugin depends is just to enable working with this repo.
 
-## Direnv
+## Direnv and Misc
 
-Lastly, this repo deponds on having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
+This repo deponds on having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
+
+Also need some basic cli commands: `gsed`, `ex` (from vim) and `make`. Lastly, the Makefile in the config directory depends on the `op` command from 1password.
 
 ## Makefile
 
 Making the config for leetcode-cli uses a Makefile in the config directory.
 
-The cookies in the leetcode-cli config are in 1password and the Makefile needs 1password's op tool to generate. If anyone else wants to copy this workflow that is easily adjusted by hardcoding the values.
+My cookies in the leetcode-cli config are in 1password and the Makefile needs 1password's op tool to generate so it is unliely to work for anyone else. But copying this workflow is easily adjusted by hardcoding the values for anyone who does not use 1password.
 
 Mostly the config enables using leetcode-cli to download problems and submit solutions in multiple languages. Switching between languages is done by using the `pyleet`, `rsleet` and `goleet` files in the `bin` directory.
-
-The Python portion of this is very much the most developed. The Rust and Go portions still need to be fleshed out. Mostly because that reflects my skill level in those languages.
 
 ## Grind75
 
