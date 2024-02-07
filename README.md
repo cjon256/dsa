@@ -9,13 +9,15 @@ My workflow for doing leetcode problems uses the following tools:
 - [leetcode-cli](https://github.com/clearloop/leetcode-cli)
 
 ```bash
-$ cargo install leetcode-cli
-$ leetcode data -u
+cargo install leetcode-cli
+leetcode data -u
 ```
 
 ## Rust Testing code generation:
 
 - [cargo-leet](https://github.com/rust-practice/cargo-leet)
+
+I use my own fork in case of breaking changes in the main repo.
 
 ```bash
 cargo install --git https://github.com/cjon256/cargo-leet.git --branch develop --features=tool
@@ -32,7 +34,8 @@ go install github.com/cweill/gotests/gotests@latest
 ## My own dsa.nvim plugin:
 
 - [dsa.nvim](https://github.com/cjon256/dsa.nvim)
-  Install using lazy.nvim:
+
+Install using lazy.nvim:
 
 ```lua
     {
@@ -43,11 +46,21 @@ go install github.com/cweill/gotests/gotests@latest
     }
 ```
 
-This on having this repo and having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
+This nvim plugin depends is just to enable working with this repo.
 
-The cookies in the leetcode-cli config are in 1password and the Makefile needs their op tool to generate.
+## Direnv
 
-The Python portion of this is very much the mast developed. The Rust and Go portions still need to be fleshed out.
+Lastly, this repo deponds on having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
+
+## Makefile
+
+Making the config for leetcode-cli uses a Makefile in the config directory.
+
+The cookies in the leetcode-cli config are in 1password and the Makefile needs 1password's op tool to generate. If anyone else wants to copy this workflow that is easily adjusted by hardcoding the values.
+
+Mostly the config enables using leetcode-cli to download problems and submit solutions in multiple languages. Switching between languages is done by using the `pyleet`, `rsleet` and `goleet` files in the `bin` directory.
+
+The Python portion of this is very much the most developed. The Rust and Go portions still need to be fleshed out. Mostly because that reflects my skill level in those languages.
 
 ## Grind75
 
