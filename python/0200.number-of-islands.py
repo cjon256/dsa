@@ -75,6 +75,49 @@ class Solution:
 
         return islands
 
+    def number_failed(self, grid: List[List[str]]) -> int:
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == "1":
+                    grid[i][j] = i + j * 300
+
+        for i in range(len(grid)):
+            for j in range(len(grid[0]) - 2, -1, -1):
+                if grid[i][j] != "0":
+                    if grid[i][j + 1] != "0":
+                        grid[i][j] = grid[i][j + 1]
+
+        for j in range(len(grid[0])):
+            for i in range(len(grid) - 2, -1, -1):
+                if grid[i][j] != "0":
+                    if grid[i + 1][j] != "0":
+                        grid[i][j] = grid[i + 1][j]
+
+        for i in range(len(grid)):
+            for j in range(1, len(grid[0])):
+                if grid[i][j] != "0":
+                    if grid[i][j - 1] != "0":
+                        grid[i][j] = grid[i][j - 1]
+
+        for j in range(len(grid[0])):
+            for i in range(1, len(grid)):
+                if grid[i][j] != "0":
+                    if grid[i - 1][j] != "0":
+                        grid[i][j] = grid[i - 1][j]
+
+        vals = set()
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                vals.add(grid[i][j])
+        islands = len(vals)
+        if "0" in vals:
+            islands -= 1
+
+        return islands
+
+
+#
+
 
 #  end_marker
 class TestSolution(unittest.TestCase):
