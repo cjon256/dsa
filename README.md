@@ -12,7 +12,7 @@ The following commands are available:
 - rsleet
 - goleet
 
-These are just thin wrappers around the tools above to enable a consistent workflow and decent tests for the problems in the three languages.
+These are just thin wrappers around the tools below to enable a consistent workflow and decent tests for the problems in the three languages.
 
 The workflow for doing leetcode problems requires setting up the following tools:
 
