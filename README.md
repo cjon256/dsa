@@ -67,7 +67,7 @@ This nvim plugin is just to enable working with this repo.
 
 ## Direnv and Misc
 
-This repo deponds on having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
+This repo depends on having direnv installed and configured. Need to direnv allow the .envrc file in the root of this repo.
 
 Also need some basic cli commands: `gsed`, `ex` (from vim) and `make`. Lastly, the Makefile in the config directory depends on the `op` command from 1password.
 
@@ -75,7 +75,7 @@ Also need some basic cli commands: `gsed`, `ex` (from vim) and `make`. Lastly, t
 
 Making the config for leetcode-cli uses a Makefile in the config directory.
 
-My cookies in the leetcode-cli config are in 1password and the Makefile needs 1password's op tool to generate so it is unliely to work for anyone else. But copying this workflow is easily adjusted by hardcoding the values for anyone who does not use 1password.
+My cookies in the leetcode-cli config are in 1password and the Makefile needs 1password's op tool to generate so it is unlikely to work for anyone else. But copying this workflow is easily adjusted by hardcoding the values for anyone who does not use 1password.
 
 Mostly the config enables using leetcode-cli to download problems and submit solutions in multiple languages. Switching between languages is done by using the `pyleet`, `rsleet` and `goleet` files in the `bin` directory.
 
