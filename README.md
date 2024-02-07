@@ -63,7 +63,7 @@ Install using lazy.nvim:
     }
 ```
 
-This nvim plugin depends is just to enable working with this repo.
+This nvim plugin is just to enable working with this repo.
 
 ## Direnv and Misc
 
