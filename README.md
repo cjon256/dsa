@@ -89,5 +89,8 @@ After I finish Grind75 (The full 169 question version) in Python, I will move on
 
 Both seem worthwhile in a Perlis kind of way:
 
-A language that doesn't affect the way you think about programming is not worth knowing.
--- Alan J. Perlis
+---
+
+> A language that doesn't affect the way you think about programming is not worth knowing.
+
+- Alan J. Perlis
