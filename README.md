@@ -1,6 +1,6 @@
 # Data Structures and Algorithms
 
-This is used to provide an easy nvim based workflow in Pyton. Rust and Go to grind on leet code.
+This is used to provide an easy nvim based workflow in Python. Rust and Go to grind on leet code.
 
 The Python portion of this is very much the most developed. The Rust and Go portions still need to be fleshed out. Mostly because that reflects my skill level in those languages.
 
