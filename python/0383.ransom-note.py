@@ -1,23 +1,54 @@
+#  Category: algorithms
+#  Level: Easy
+#  Percent: 60.61229%
+# pylint: enable=useless-suppression
+# pylint: disable=invalid-name, line-too-long, too-few-public-methods
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
+
+#  Given two strings ransomNote and magazine, return true if ransomNote can be constructed by using the letters from magazine and false otherwise.
+#
+#  Each letter in magazine can only be used once in ransomNote.
+#
+#
+#  Example 1:
+#  Input: ransomNote = "a", magazine = "b"
+#  Output: false
+#  Example 2:
+#  Input: ransomNote = "aa", magazine = "ab"
+#  Output: false
+#  Example 3:
+#  Input: ransomNote = "aa", magazine = "aab"
+#  Output: true
+#
+#
+#  Constraints:
+#
+#
+#  	1 <= ransomNote.length, magazine.length <= 10⁵
+#  	ransomNote and magazine consist of lowercase English letters.
+#
+
 import unittest
 
-DEBUG = False
 
-
+#  start_marker
 class Solution:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
         note_letters = list(magazine)
         for i in ransomNote:
-            if DEBUG:
-                print(i)
+            # print(i)
             if i in note_letters:
-                if DEBUG:
-                    print(f"{i} in {note_letters}")
+                # print(f"{i} in {note_letters}")
                 note_letters.remove(i)
             else:
-                if DEBUG:
-                    print(f"{i} not in {note_letters}")
+                # print(f"{i} not in {note_letters}")
                 return False
         return True
+        #  end_marker
+
+
+DEBUG = False
 
 
 class Test(unittest.TestCase):
