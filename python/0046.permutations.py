@@ -51,10 +51,6 @@ def compare_permutations(l1, l2):
 #  start_marker
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        [[1]]
-        [[1, 2], [2, 1]]
-        [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
-
         perms = [[nums[0]]]
         for i in range(1, len(nums)):
             new_perms = []
