@@ -59,6 +59,45 @@ from typing import Dict, List
 #  start_marker
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+        email_dict: Dict[str, int] = {}
+        for i, acc in enumerate(accounts):
+            k, *v = acc
+            new_emails = set(v)
+            for email in set(v):
+                if email in email_dict and email_dict[email] != i:
+                    old_idx = email_dict[email]
+                    old_v = accounts[old_idx][1:]
+                    new_emails |= set(old_v)
+                    for e in old_v:
+                        email_dict[e] = i
+                    accounts[old_idx] = []
+                email_dict[email] = i
+            accounts[i] = [k] + sorted(list(new_emails))
+        return list([x for x in accounts if x])
+        # end_marker
+
+    def accountsMerge_old_sad(self, accounts: List[List[str]]) -> List[List[str]]:
+        email_dict: Dict[str, int] = {}
+        end_marker = len(accounts)
+        curr = 0
+        while curr < end_marker:
+            add_point = curr
+            k, *v = accounts[curr]
+            add_point_email_set = set(v)
+            for email in add_point_email_set:
+                if email in email_dict:
+                    add_point = email_dict[email]
+                    old_k, *old_v = accounts[add_point]
+                    if old_k != k:
+                        raise ValueError(f"old_k: {old_k}, k: {k}")
+                    working_set = set(old_v) | set([email])
+                    accounts[add_point] = [k] + list(working_set)
+                    accounts[curr] = None
+                email_dict[email] = add_point
+            curr += 1
+        return accounts
+
+    def accountsMerge_old_but_works(self, accounts: List[List[str]]) -> List[List[str]]:
         merged_accounts: defaultdict[str, List] = defaultdict(list)
         email_dict: Dict[str, int] = {}
         for k, *v in accounts:
@@ -101,8 +140,6 @@ class Solution:
                     retval.append([k] + sorted(list(e)))
         return retval
 
-
-# end_marker
 
 # for k, *v in accounts:
 #     print(f"k: {k}, v: {v}")
@@ -192,32 +229,76 @@ class TestSolution(unittest.TestCase):
         with open("data/0721_TEST_4_ACC.dat", "rb") as f:
             accounts = pickle.load(f)
         result = Solution().accountsMerge(accounts)
-        print(len(result))
-        print(result)
+        # print(result)
+        # print(len(result))
+        self.assertTrue(len(result) == 1)
+
+    def test_case_5(self):
+        accounts = [
+            ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
+            ["John", "johnsmith@mail.com", "john00@mail.com"],
+            ["Mary", "mary@mail.com"],
+            ["John", "johnnybravo@mail.com"],
+        ]
+        expected = [
+            ["John", "john00@mail.com", "john_newyork@mail.com", "johnsmith@mail.com"],
+            ["Mary", "mary@mail.com"],
+            ["John", "johnnybravo@mail.com"],
+        ]
+        result = Solution().accountsMerge(accounts)
+        self.assertTrue(set_equal(result, expected))
+
+    def test_case_6(self):
+        accounts = [
+            ["Gabe", "Gabe0@m.co", "Gabe3@m.co", "Gabe1@m.co"],
+            ["Kevin", "Kevin3@m.co", "Kevin5@m.co", "Kevin0@m.co"],
+            ["Ethan", "Ethan5@m.co", "Ethan4@m.co", "Ethan0@m.co"],
+            ["Hanzo", "Hanzo3@m.co", "Hanzo1@m.co", "Hanzo0@m.co"],
+            ["Fern", "Fern5@m.co", "Fern1@m.co", "Fern0@m.co"],
+        ]
+        expected = [
+            ["Ethan", "Ethan0@m.co", "Ethan4@m.co", "Ethan5@m.co"],
+            ["Gabe", "Gabe0@m.co", "Gabe1@m.co", "Gabe3@m.co"],
+            ["Hanzo", "Hanzo0@m.co", "Hanzo1@m.co", "Hanzo3@m.co"],
+            ["Kevin", "Kevin0@m.co", "Kevin3@m.co", "Kevin5@m.co"],
+            ["Fern", "Fern0@m.co", "Fern1@m.co", "Fern5@m.co"],
+        ]
+        result = Solution().accountsMerge(accounts)
+        self.assertTrue(set_equal(result, expected))
 
 
 if __name__ == "__main__":
     unittest.main()
-    # print(result)
 
     # accounts = [
-    #     ["David", "David0@m.co", "David1@m.co"],
-    #     ["David", "David3@m.co", "David4@m.co"],
-    #     ["David", "David4@m.co", "David5@m.co"],
-    #     ["David", "David2@m.co", "David3@m.co"],
-    #     ["David", "David1@m.co", "David2@m.co"],
+    #     ["David", "David0@m.co", "David4@m.co", "David3@m.co"],
+    #     ["David", "David5@m.co", "David5@m.co", "David0@m.co"],
+    #     ["David", "David1@m.co", "David4@m.co", "David0@m.co"],
+    #     ["David", "David0@m.co", "David1@m.co", "David3@m.co"],
+    #     ["David", "David4@m.co", "David1@m.co", "David3@m.co"],
     # ]
-    # # Output:        [["David","David0@m.co","David1@m.co","David2@m.co","David3@m.co","David4@m.co","David5@m.co"],["David","David0@m.co","David1@m.co","David2@m.co","David3@m.co","David4@m.co","David5@m.co"]]
+    # # [["David","David0@m.co","David3@m.co","David4@m.co","David5@m.co"],["David","David0@m.co","David1@m.co","David3@m.co","David4@m.co"],["David","David0@m.co","David1@m.co","David3@m.co","David4@m.co"],["David","David0@m.co","David1@m.co","David3@m.co","David4@m.co"]]
     # expected = [
     #     [
     #         "David",
     #         "David0@m.co",
     #         "David1@m.co",
-    #         "David2@m.co",
     #         "David3@m.co",
     #         "David4@m.co",
     #         "David5@m.co",
     #     ]
     # ]
     # result = Solution().accountsMerge(accounts)
+    # print(len(result))
+    # print(result)
+    #
     # print(set_equal(expected, result))
+    # accounts = [
+    #     ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
+    #     ["John", "johnsmith@mail.com", "john00@mail.com"],
+    #     ["Mary", "mary@mail.com"],
+    #     ["John", "johnnybravo@mail.com"],
+    # ]
+    # result = Solution().accountsMerge(accounts)
+    # print(result)
+    # print(len(result))
