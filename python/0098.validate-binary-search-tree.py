@@ -38,16 +38,12 @@
 #  	-2³¹ <= Node.val <= 2³¹ - 1
 #
 
-
 import unittest
 from typing import Optional
 
-# from leetopenlib.linked_list import ListNode, list_to_linked_list, linked_list_to_list
 from leetopenlib.tree import TreeNode, list_to_tree
 
 
-# from leetopenlib.tree import TreeNode, liststr_to_tree, tree_to_liststr, pretty_print_tree
-# from leetopenlib.graph import Node, graph_to_adj_list, adj_list_to_graph
 #  start_marker
 # Definition for a binary tree node.
 # class TreeNode:
