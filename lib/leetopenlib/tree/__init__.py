@@ -4,6 +4,8 @@ import unittest
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
+from rich.tree import Tree as RichTree
+
 
 @dataclass
 class TreeNode:
@@ -76,10 +78,53 @@ class TreeNode:
         for line in lines:
             print(line)
 
+    def rich_walk(self) -> RichTree:
+        tree = RichTree(str(self.val))
+        if self.left:
+            tree.add(self.left.rich_walk())
+        if self.right:
+            tree.add(self.right.rich_walk())
+        return tree
+
+
+# convert to list without placeholders
+def tree_to_simple_list_preorder(root):
+    """Convert tree to list in preorder without placeholders."""
+    if root is None:
+        return []
+    return (
+        [root.val]
+        + tree_to_simple_list_preorder(root.left)
+        + tree_to_simple_list_preorder(root.right)
+    )
+
+
+def tree_to_simple_list_inorder(root):
+    """Convert tree to list in inorder without placeholders."""
+    if root is None:
+        return []
+    return (
+        tree_to_simple_list_inorder(root.left)
+        + [root.val]
+        + tree_to_simple_list_inorder(root.right)
+    )
+
+
+def tree_to_simple_list_postorder(root):
+    """Convert tree to list in postorder without placeholders."""
+    if root is None:
+        return []
+    return (
+        tree_to_simple_list_postorder(root.left)
+        + tree_to_simple_list_postorder(root.right)
+        + [root.val]
+    )
+
 
 # pylint: disable-next=line-too-long
 # per https://leetcode.com/problems/recover-binary-search-tree/solutions/32539/Tree-Deserializer-and-Visualizer-for-Python/
 def liststr_to_tree(string):
+    """Convert list string to tree (uses 'null' for placeholders)."""
     if string in ["{}", "[]"]:
         return None
     nodes = [
@@ -98,10 +143,11 @@ def liststr_to_tree(string):
 
 
 def tree_to_liststr(root: Optional[TreeNode]) -> str:
+    """Convert tree to list string (uses 'null' for placeholders)."""
     if not root:
         return "[]"
-    result = []
-    queue = [root]
+    result: List[int | str] = []
+    queue: List[Optional[TreeNode]] = [root]
     while queue:
         node = queue.pop(0)
         if node:
@@ -148,6 +194,24 @@ def list_to_tree(lis: List[Optional[int]]) -> Optional[TreeNode]:
             node.right = TreeNode(right)
             queue.append(node.right)
         i += 1
+    return root
+
+
+def list_to_tree_preorder(lst: List[Optional[int]]) -> Optional[TreeNode]:
+    if not lst or lst[0] is None:
+        return None
+    root = TreeNode(lst[0])
+    stack = [root]
+    for i in range(1, len(lst)):
+        val = lst[i]
+        if val is not None:
+            node = TreeNode(val)
+            stack[-1].left = node
+            stack.append(node)
+        else:
+            stack.pop()
+            if stack:
+                stack[-1].right = None
     return root
 
 
