@@ -4,7 +4,7 @@ import unittest
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
-from rich.tree import Tree as RichTree
+from ppbtree import print_tree
 
 
 @dataclass
@@ -78,13 +78,11 @@ class TreeNode:
         for line in lines:
             print(line)
 
-    def rich_walk(self) -> RichTree:
-        tree = RichTree(str(self.val))
-        if self.left:
-            tree.add(self.left.rich_walk())
-        if self.right:
-            tree.add(self.right.rich_walk())
-        return tree
+    def pp(self) -> None:
+        print_tree(self, nameattr="val", left_child="left", right_child="right")
+
+    def __repr__(self):
+        return f"TreeNode({self.val})"
 
 
 # convert to list without placeholders
@@ -265,6 +263,12 @@ class TestSerDeTree(unittest.TestCase):
         root = list_to_tree([1, 2, 3, None, None, 4, None, None, 5])
         assert root is not None
         self.assertEqual(tree_to_list(root), [1, 2, 3, None, None, 4, None, None, 5])
+
+    def test_case_7(self):
+        root = list_to_tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+        assert root is not None
+        self.assertEqual(tree_to_list(root), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+        root.pp()
 
 
 if __name__ == "__main__":
