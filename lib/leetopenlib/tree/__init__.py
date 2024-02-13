@@ -119,6 +119,22 @@ def tree_to_simple_list_postorder(root):
     )
 
 
+def tree_to_simple_list_levelorder(root):
+    """Convert tree to list in levelorder without placeholders."""
+    if root is None:
+        return []
+    queue = [root]
+    result = []
+    while queue:
+        node = queue.pop(0)
+        result.append(node.val)
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+    return result
+
+
 # pylint: disable-next=line-too-long
 # per https://leetcode.com/problems/recover-binary-search-tree/solutions/32539/Tree-Deserializer-and-Visualizer-for-Python/
 def liststr_to_tree(string):
@@ -268,7 +284,101 @@ class TestSerDeTree(unittest.TestCase):
         root = list_to_tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         assert root is not None
         self.assertEqual(tree_to_list(root), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
-        root.pp()
+
+    def test_all_trees_with_2_nodes(self):
+        # test all trees with 2 nodes
+        trees = [[1, 2, None], [1, None, 2]]
+        preorders = [[1, 2], [1, 2]]
+        inorders = [[2, 1], [1, 2]]
+
+        for tree, preorder, inorder in zip(trees, preorders, inorders):
+            root = list_to_tree(tree)
+            while tree[-1] is None:
+                tree.pop()
+            self.assertEqual(tree_to_list(root), tree)
+            self.assertEqual(preorder, tree_to_simple_list_preorder(root))
+            self.assertEqual(inorder, tree_to_simple_list_inorder(root))
+
+    def test_all_trees_with_3_nodes(self):
+        # test all trees with 3 nodes
+        trees = [
+            [1, 2, 3],
+            [1, 2, None, 3, None],
+            [1, 2, None, None, 3],
+            [1, None, 2, 3, None],
+            [1, None, 2, None, 3],
+        ]
+        preorders = [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]]
+        inorders = [[2, 1, 3], [3, 2, 1], [2, 3, 1], [1, 3, 2], [1, 2, 3]]
+
+        for tree, preorder, inorder in zip(trees, preorders, inorders):
+            root = list_to_tree(tree)
+            while tree[-1] is None:
+                tree.pop()
+            self.assertEqual(tree_to_list(root), tree)
+            self.assertEqual(preorder, tree_to_simple_list_preorder(root))
+            self.assertEqual(inorder, tree_to_simple_list_inorder(root))
+
+    def test_all_trees_with_4_nodes(self):
+        # test all trees with 4 nodes
+        trees = [
+            [1, 2, 3, 4, None],  # ............  1
+            [1, 2, 3, None, 4],  # ............  2
+            [1, 2, 3, None, None, 4, None],  #   3
+            [1, 2, 3, None, None, None, 4],  #   4
+            [1, 2, None, 3, 4],  # ............  5
+            [1, None, 2, 3, 4],  # ............  6
+            [1, 2, None, 3, None, 4, None],  #   7
+            [1, 2, None, 3, None, None, 4],  #   8
+            [1, 2, None, None, 3, 4, None],  #   9
+            [1, 2, None, None, 3, None, 4],  #   10
+            [1, None, 2, 3, None, 4, None],  #   11
+            [1, None, 2, 3, None, None, 4],  #   12
+            [1, None, 2, None, 3, 4, None],  #   13
+            [1, None, 2, None, 3, None, 4],  #   14
+        ]
+        preorders = [
+            [1, 2, 4, 3],  # ..................  1
+            [1, 2, 4, 3],  # ..................  2
+            [1, 2, 3, 4],  # ..................  3
+            [1, 2, 3, 4],  # ..................  4
+            [1, 2, 3, 4],  # ..................  5
+            [1, 2, 3, 4],  # ..................  6
+            [1, 2, 3, 4],  # ..................  7
+            [1, 2, 3, 4],  # ..................  8
+            [1, 2, 3, 4],  # ..................  9
+            [1, 2, 3, 4],  # ..................  10
+            [1, 2, 3, 4],  # ..................  11
+            [1, 2, 3, 4],  # ..................  12
+            [1, 2, 3, 4],  # ..................  13
+            [1, 2, 3, 4],  # ..................  14
+        ]
+
+        inorders = [
+            [4, 2, 1, 3],  # ..................  1
+            [2, 4, 1, 3],  # ..................  2
+            [2, 1, 4, 3],  # ..................  3
+            [2, 1, 3, 4],  # ..................  4
+            [3, 2, 4, 1],  # ..................  5
+            [1, 3, 2, 4],  # ..................  6
+            [4, 3, 2, 1],  # ..................  7
+            [3, 4, 2, 1],  # ..................  8
+            [2, 4, 3, 1],  # ..................  9
+            [2, 3, 4, 1],  # .................. 10
+            [1, 4, 3, 2],  # .................. 11
+            [1, 3, 4, 2],  # .................. 12
+            [1, 2, 4, 3],  # .................. 13
+            [1, 2, 3, 4],  # .................. 14
+        ]
+        for tree, preorder, inorder in zip(trees, preorders, inorders):
+            root = list_to_tree(tree)
+            while tree[-1] is None:
+                tree.pop()
+            level_order = [1, 2, 3, 4]
+            self.assertEqual(tree_to_list(root), tree)
+            self.assertEqual(preorder, tree_to_simple_list_preorder(root))
+            self.assertEqual(inorder, tree_to_simple_list_inorder(root))
+            self.assertEqual(tree_to_simple_list_levelorder(root), level_order)
 
 
 if __name__ == "__main__":
