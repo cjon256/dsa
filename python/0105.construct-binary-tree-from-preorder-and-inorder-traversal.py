@@ -47,19 +47,65 @@ from typing import List, Optional
 
 from leetopenlib.tree import (
     TreeNode,
-    list_to_tree,
     tree_to_list,
     tree_to_simple_list_inorder,
     tree_to_simple_list_preorder,
 )
-from rich import print as rprint
-
-DEBUG = 1
 
 
 #  start_marker
 class Solution:
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        if len(preorder) == 0:
+            return None
+        if len(preorder) == 1:
+            return TreeNode(preorder[0])
+        root = TreeNode(preorder[0])
+        inorder_index = {}
+        for i, val in enumerate(inorder):
+            inorder_index[val] = i
+
+        preorder_curr = 1
+
+        def build_tree(
+            node: TreeNode, left: int, mid: int, right: int
+        ) -> Optional[TreeNode]:
+            nonlocal preorder_curr
+            if preorder_curr >= len(preorder):
+                return node
+            if left == right:
+                return node
+
+            next_val = preorder[preorder_curr]
+            inorder_index_next_val = inorder_index[next_val]
+            if inorder_index_next_val >= left and inorder_index_next_val < mid:
+                left_val = preorder[preorder_curr]
+                node.left = TreeNode(left_val)
+                preorder_curr += 1
+                build_tree(
+                    node.left,
+                    left,
+                    inorder_index[left_val],
+                    mid,
+                )
+
+            if preorder_curr >= len(preorder):
+                return node
+            next_val = preorder[preorder_curr]
+            inorder_index_next_val = inorder_index[next_val]
+            if inorder_index_next_val >= mid + 1 and inorder_index_next_val < right:
+                right_val = preorder[preorder_curr]
+                node.right = TreeNode(right_val)
+                preorder_curr += 1
+                build_tree(node.right, mid + 1, inorder_index[right_val], right)
+            return node
+
+        return build_tree(root, 0, inorder_index[root.val], len(inorder))
+        #  end_marker
+
+    def buildTree_with_prints(
+        self, preorder: List[int], inorder: List[int]
+    ) -> Optional[TreeNode]:
         # print(f"buildTree (preorder: {preorder}, inorder: {inorder})")
         if len(preorder) == 0:
             return None
@@ -123,7 +169,6 @@ class Solution:
             return node
 
         return build_tree(root, 0, inorder_index[root.val], len(inorder))
-        #  end_marker
 
 
 class TestSolution(unittest.TestCase):
