@@ -1,0 +1,243 @@
+#!env python3
+
+import os
+import sys
+
+# fmt: off
+neetcode = [
+    ["0217", "Contains Duplicate", "Arrays & Hashing (1/9)"],
+    ["0242", "Valid Anagram", "Arrays & Hashing (2/9)"],
+    ["0001", "Two Sum", "Arrays & Hashing (3/9)"],
+    ["0049", "Group Anagrams", "Arrays & Hashing (4/9)"],
+    ["0347", "Top K Frequent Elements", "Arrays & Hashing (5/9)"],
+    ["0238", "Product of Array Except Self", "Arrays & Hashing (6/9)"],
+    ["0036", "Valid Sudoku", "Arrays & Hashing (7/9)"],
+    ["0271", "Encode and Decode Strings", "Arrays & Hashing (8/9)"],
+    ["0128", "Longest Consecutive Sequence", "Arrays & Hashing (9/9)"],
+    ["0020", "Valid Parentheses", "Stack (1/7)"],
+    ["0155", "Min Stack", "Stack (2/7)"],
+    ["0150", "Evaluate Reverse Polish Notation", "Stack (3/7)"],
+    ["0022", "Generate Parentheses", "Stack (4/7)"],
+    ["0739", "Daily Temperatures", "Stack (5/7)"],
+    ["0853", "Car Fleet", "Stack (6/7)"],
+    ["0084", "Largest Rectangle In Histogram", "Stack (7/7)"],
+    ["0125", "Valid Palindrome", "Two Pointers (1/5)"],
+    ["0167", "Two Sum II Input Array Is Sorted", "Two Pointers (2/5)"],
+    ["0015", "3Sum", "Two Pointers (3/5)"],
+    ["0011", "Container With Most Water", "Two Pointers (4/5)"],
+    ["0042", "Trapping Rain Water", "Two Pointers (5/5)"],
+    ["0206", "Reverse Linked List", "Linked List (1/11)"],
+    ["0021", "Merge Two Sorted Lists", "Linked List (2/11)"],
+    ["0143", "Reorder List", "Linked List (3/11)"],
+    ["0019", "Remove Nth Node From End of List", "Linked List (4/11)"],
+    ["0138", "Copy List With Random Pointer", "Linked List (5/11)"],
+    ["0002", "Add Two Numbers", "Linked List (6/11)"],
+    ["0141", "Linked List Cycle", "Linked List (7/11)"],
+    ["0287", "Find The Duplicate Number", "Linked List (8/11)"],
+    ["0146", "LRU Cache", "Linked List (9/11)"],
+    ["0023", "Merge K Sorted Lists", "Linked List (10/11)"],
+    ["0025", "Reverse Nodes In K Group", "Linked List (11/11)"],
+    ["0121", "Best Time to Buy And Sell Stock", "Sliding Window (1/6)"],
+    ["0003", "Longest Substring Without Repeating Characters", "Sliding Window (2/6)"],
+    ["0424", "Longest Repeating Character Replacement", "Sliding Window (3/6)"],
+    ["0567", "Permutation In String", "Sliding Window (4/6)"],
+    ["0076", "Minimum Window Substring", "Sliding Window (5/6)"],
+    ["0239", "Sliding Window Maximum", "Sliding Window (6/6)"],
+    ["0704", "Binary Search", "Binary Search (1/7)"],
+    ["0074", "Search a 2D Matrix", "Binary Search (2/7)"],
+    ["0875", "Koko Eating Bananas", "Binary Search (3/7)"],
+    ["0153", "Find Minimum In Rotated Sorted Array", "Binary Search (4/7)"],
+    ["0033", "Search In Rotated Sorted Array", "Binary Search (5/7)"],
+    ["0981", "Time Based Key Value Store", "Binary Search (6/7)"],
+    ["0004", "Median of Two Sorted Arrays", "Binary Search (7/7)"],
+    ["0226", "Invert Binary Tree", "Trees (1/15)"],
+    ["0104", "Maximum Depth of Binary Tree", "Trees (2/15)"],
+    ["0543", "Diameter of Binary Tree", "Trees (3/15)"],
+    ["0110", "Balanced Binary Tree", "Trees (4/15)"],
+    ["0100", "Same Tree", "Trees (5/15)"],
+    ["0572", "Subtree of Another Tree", "Trees (6/15)"],
+    ["0235", "Lowest Common Ancestor of a Binary Search Tree", "Trees (7/15)"],
+    ["0102", "Binary Tree Level Order Traversal", "Trees (8/15)"],
+    ["0199", "Binary Tree Right Side View", "Trees (9/15)"],
+    ["1448", "Count Good Nodes In Binary Tree", "Trees (10/15)"],
+    ["0098", "Validate Binary Search Tree", "Trees (11/15)"],
+    ["0230", "Kth Smallest Element In a Bst", "Trees (12/15)"],
+    ["0105", "Construct Binary Tree From Preorder And Inorder Traversal", "Trees (13/15)", ],
+    ["0124", "Binary Tree Maximum Path Sum", "Trees (14/15)"],
+    ["0297", "Serialize And Deserialize Binary Tree", "Trees (15/15)"],
+    ["0208", "Implement Trie Prefix Tree", "Tries (1/3)"],
+    ["0211", "Design Add And Search Words Data Structure", "Tries (2/3)"],
+    ["0212", "Word Search II", "Tries (3/3)"],
+    ["0078", "Subsets", "Backtracking (1/9)"],
+    ["0039", "Combination Sum", "Backtracking (2/9)"],
+    ["0046", "Permutations", "Backtracking (3/9)"],
+    ["0090", "Subsets II", "Backtracking (4/9)"],
+    ["0040", "Combination Sum II", "Backtracking (5/9)"],
+    ["0079", "Word Search", "Backtracking (6/9)"],
+    ["0131", "Palindrome Partitioning", "Backtracking (7/9)"],
+    ["0017", "Letter Combinations of a Phone Number", "Backtracking (8/9)"],
+    ["0051", "N Queens", "Backtracking (9/9)"],
+    ["0703", "Kth Largest Element In a Stream", "Heap / Priority Queue (1/7)"],
+    ["1046", "Last Stone Weight", "Heap / Priority Queue (2/7)"],
+    ["0973", "K Closest Points to Origin", "Heap / Priority Queue (3/7)"],
+    ["0215", "Kth Largest Element In An Array", "Heap / Priority Queue (4/7)"],
+    ["0621", "Task Scheduler", "Heap / Priority Queue (5/7)"],
+    ["0355", "Design Twitter", "Heap / Priority Queue (6/7)"],
+    ["0295", "Find Median From Data Stream", "Heap / Priority Queue (7/7)"],
+    ["0200", "Number of Islands", "Graphs (1/13)"],
+    ["0133", "Clone Graph", "Graphs (2/13)"],
+    ["0695", "Max Area of Island", "Graphs (3/13)"],
+    ["0417", "Pacific Atlantic Water Flow", "Graphs (4/13)"],
+    ["0130", "Surrounded Regions", "Graphs (5/13)"],
+    ["0994", "Rotting Oranges", "Graphs (6/13)"],
+    ["0286", "Walls And Gates", "Graphs (7/13)"],
+    ["0207", "Course Schedule", "Graphs (8/13)"],
+    ["0210", "Course Schedule II", "Graphs (9/13)"],
+    ["0684", "Redundant Connection", "Graphs (10/13)"],
+    ["0323", "Number of Connected Components In An Undirected Graph", "Graphs (11/13)"],
+    ["0261", "Graph Valid Tree", "Graphs (12/13)"],
+    ["0127", "Word Ladder", "Graphs (13/13)"],
+    ["0070", "Climbing Stairs", "1-D Dynamic Programming (1/12)"],
+    ["0746", "Min Cost Climbing Stairs", "1-D Dynamic Programming (2/12)"],
+    ["0198", "House Robber", "1-D Dynamic Programming (3/12)"],
+    ["0213", "House Robber II", "1-D Dynamic Programming (4/12)"],
+    ["0005", "Longest Palindromic Substring", "1-D Dynamic Programming (5/12)"],
+    ["0647", "Palindromic Substrings", "1-D Dynamic Programming (6/12)"],
+    ["0091", "Decode Ways", "1-D Dynamic Programming (7/12)"],
+    ["0322", "Coin Change", "1-D Dynamic Programming (8/12)"],
+    ["0152", "Maximum Product Subarray", "1-D Dynamic Programming (9/12)"],
+    ["0139", "Word Break", "1-D Dynamic Programming (10/12)"],
+    ["0300", "Longest Increasing Subsequence", "1-D Dynamic Programming (11/12)"],
+    ["0416", "Partition Equal Subset Sum", "1-D Dynamic Programming (12/12)"],
+    ["0057", "Insert Interval", "Intervals (1/6)"],
+    ["0056", "Merge Intervals", "Intervals (2/6)"],
+    ["0435", "Non Overlapping Intervals", "Intervals (3/6)"],
+    ["0252", "Meeting Rooms", "Intervals (4/6)"],
+    ["0253", "Meeting Rooms II", "Intervals (5/6)"],
+    ["1851", "Minimum Interval to Include Each Query", "Intervals (6/6)"],
+    ["0053", "Maximum Subarray", "Greedy (1/8)"],
+    ["0055", "Jump Game", "Greedy (2/8)"],
+    ["0045", "Jump Game II", "Greedy (3/8)"],
+    ["0134", "Gas Station", "Greedy (4/8)"],
+    ["0846", "Hand of Straights", "Greedy (5/8)"],
+    ["1899", "Merge Triplets to Form Target Triplet", "Greedy (6/8)"],
+    ["0763", "Partition Labels", "Greedy (7/8)"],
+    ["0678", "Valid Parenthesis String", "Greedy (8/8)"],
+    ["0332", "Reconstruct Itinerary", "Advanced Graphs (1/6)"],
+    ["1584", "Min Cost to Connect All Points", "Advanced Graphs (2/6)"],
+    ["0743", "Network Delay Time", "Advanced Graphs (3/6)"],
+    ["0778", "Swim In Rising Water", "Advanced Graphs (4/6)"],
+    ["0269", "Alien Dictionary", "Advanced Graphs (5/6)"],
+    ["0787", "Cheapest Flights Within K Stops", "Advanced Graphs (6/6)"],
+    ["0062", "Unique Paths", "2-D Dynamic Programming (1/11)"],
+    ["1143", "Longest Common Subsequence", "2-D Dynamic Programming (2/11)"],
+    ["0309", "Best Time to Buy And Sell Stock With Cooldown", "2-D Dynamic Programming (3/11)", ],
+    ["0518", "Coin Change II", "2-D Dynamic Programming (4/11)"],
+    ["0494", "Target Sum", "2-D Dynamic Programming (5/11)"],
+    ["0097", "Interleaving String", "2-D Dynamic Programming (6/11)"],
+    ["0329", "Longest Increasing Path In a Matrix", "2-D Dynamic Programming (7/11)"],
+    ["0115", "Distinct Subsequences", "2-D Dynamic Programming (8/11)"],
+    ["0072", "Edit Distance", "2-D Dynamic Programming (9/11)"],
+    ["0312", "Burst Balloons", "2-D Dynamic Programming (10/11)"],
+    ["0010", "Regular Expression Matching", "2-D Dynamic Programming (11/11)"],
+    ["0136", "Single Number", "Bit Manipulation (1/7)"],
+    ["0191", "Number of 1 Bits", "Bit Manipulation (2/7)"],
+    ["0338", "Counting Bits", "Bit Manipulation (3/7)"],
+    ["0190", "Reverse Bits", "Bit Manipulation (4/7)"],
+    ["0268", "Missing Number", "Bit Manipulation (5/7)"],
+    ["0371", "Sum of Two Integers", "Bit Manipulation (6/7)"],
+    ["0007", "Reverse Integer", "Bit Manipulation (7/7)"],
+    ["0048", "Rotate Image", "Math & Geometry (1/8)"],
+    ["0054", "Spiral Matrix", "Math & Geometry (2/8)"],
+    ["0073", "Set Matrix Zeroes", "Math & Geometry (3/8)"],
+    ["0202", "Happy Number", "Math & Geometry (4/8)"],
+    ["0066", "Plus One", "Math & Geometry (5/8)"],
+    ["0050", "Pow(x, n)", "Math & Geometry (6/8)"],
+    ["0043", "Multiply Strings", "Math & Geometry (7/8)"],
+    ["2013", "Detect Squares", "Math & Geometry (8/8)"],
+]
+# fmt: on
+
+# get the output of leetcode list
+leetcode_list = os.popen("leetcode list").read().split("\n")
+
+""" leetcode list now looks like this:
+      ✔ [  1 ] Two Sum                                                      Easy   (51.64 %)
+        [  2 ] Add Two Numbers                                              Medium (42.08 %)
+        [  3 ] Longest Substring Without Repeating Characters               Medium (34.39 %)
+        [  4 ] Median of Two Sorted Arrays                                  Hard   (39.07 %)
+        [  5 ] Longest Palindromic Substring                                Medium (33.51 %)
+        [  6 ] Zigzag Conversion                                            Medium (47.05 %)
+        [  7 ] Reverse Integer                                              Medium (28.25 %)
+        [  8 ] String to Integer (atoi)                                     Medium (17.01 %)
+        [  9 ] Palindrome Number                                            Easy   (55.40 %)
+        [ 10 ] Regular Expression Matching                                  Hard   (28.04 %)
+...
+        [3017] Count the Number of Houses at a Certain Distance II          Hard   (17.02 %)
+  🔒    [3018] Maximum Number of Removal Queries That Can Be Processed I    Hard   (52.27 %)
+
+        Listed: 2936     Locked: 574      Starred: 0
+        Accept: 47       Not-Ac: 0        Remain:  2889
+        Easy  : 717      Medium: 1557     Hard:    662
+
+"""
+
+leetcode_dict = {}
+for i in leetcode_list:
+    if i:
+        if "[" not in i:
+            continue
+        locked = "🔒" in i
+        checked = "✔" in i
+        number = i.split("[")[1].split("]")[0].strip()
+        entry = {
+            "line": i,
+            "checked": checked,
+            "locked": locked,
+            "number": number,
+        }
+        leetcode_dict[int(number)] = entry
+
+
+def print_all(filter=lambda _: True):
+    for k in neetcode:
+        number, name, section = k
+        entry = leetcode_dict[int(number)]
+        if entry["locked"]:
+            priv = "🔒"
+        else:
+            priv = "  "
+        if entry["checked"]:
+            chk = "✔"
+        else:
+            chk = " "
+        hardness = entry["line"][75:].strip()
+        result = f"{number} {priv} {chk} {name:60} {section:32} {hardness}"
+        if filter(entry):
+            print(result)
+
+
+def usage():
+    print("Usage: neetcode [next|undone]")
+    print("  next: return the first grind75 problem that is not checked")
+    print("  undone: return all grind75 problems that are not checked")
+    print("  no argument: return all grind75 problems")
+    sys.exit(1)
+
+
+# return first grind75 problem that is not checked if argeumnet is 'next'
+if len(sys.argv) > 1:
+    if sys.argv[1] == "next":
+        for j in neetcode:
+            number, name, section = j
+            n = int(number)
+            entry = leetcode_dict[n]
+            if not entry["checked"]:
+                print(n)
+                break
+    elif sys.argv[1] == "undone":
+        print_all(filter=lambda x: not x["checked"])
+    else:
+        usage()
+else:
+    print_all()

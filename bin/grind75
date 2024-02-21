@@ -223,13 +223,43 @@ for i in leetcode_list:
         leetcode_dict[int(number)] = entry
 
 
-# return first grind75 problem that is not checked if argeumnet is 'next'
-if len(sys.argv) > 1 and sys.argv[1] == "next":
-    for j in grind75:
-        entry = leetcode_dict[j]
-        if not entry["checked"]:
-            print(j)
-            break
-else:
+def print_all(filter=lambda _: True):
     for k in grind75:
-        print(k, leetcode_dict[k])
+        entry = leetcode_dict[k]
+        if entry["locked"]:
+            priv = "🔒"
+        else:
+            priv = "  "
+        if entry["checked"]:
+            chk = "✔"
+        else:
+            chk = " "
+        name = entry["line"][14:64].strip()
+        hardness = entry["line"][75:].strip()
+        result = f"{k:04} {priv} {chk} {name:60} {hardness}"
+        if filter(entry):
+            print(result)
+
+
+def usage():
+    print("Usage: neetcode [next|undone]")
+    print("  next: return the first grind75 problem that is not checked")
+    print("  undone: return all grind75 problems that are not checked")
+    print("  no argument: return all grind75 problems")
+    sys.exit(1)
+
+
+# return first grind75 problem that is not checked if argeumnet is 'next'
+if len(sys.argv) > 1:
+    if sys.argv[1] == "next":
+        for j in grind75:
+            entry = leetcode_dict[j]
+            if not entry["checked"]:
+                print(j)
+                break
+    elif sys.argv[1] == "undone":
+        print_all(filter=lambda x: not x["checked"])
+    else:
+        usage()
+else:
+    print_all()
