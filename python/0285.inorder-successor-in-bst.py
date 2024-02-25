@@ -115,43 +115,66 @@ def find_node_in_bst(node: Optional[TreeNode], val: int) -> Optional[TreeNode]:
 
 class TestSolution(unittest.TestCase):
     def test_case_1(self):
-        root: TreeNode = list_to_tree([2, 1, 3])
+        root = list_to_tree([2, 1, 3])
         p = find_node_in_bst(root, 1)
         expected = 2
-        result = Solution().inorderSuccessor(root, p)
-        self.assertEqual(result.val, expected)
+        result = Solution().inorderSuccessor(root, p)  # type: ignore
+        self.assertEqual(result.val, expected)  # type: ignore
 
     def test_case_2(self):
         root = list_to_tree([5, 3, 6, 2, 4, null, null, 1, None])
         p = find_node_in_bst(root, 6)
         expected = None
-        result = Solution().inorderSuccessor(root, p)
+        result = Solution().inorderSuccessor(root, p)  # type: ignore
         self.assertEqual(result, expected)
 
     def test_case_3(self):
         root = list_to_tree([0])
         p = find_node_in_bst(root, 0)
         expected = None
-        result = Solution().inorderSuccessor(root, p)
+        result = Solution().inorderSuccessor(root, p)  # type: ignore
         self.assertEqual(result, expected)
 
     def test_case_4(self):
         root = list_to_tree([5, 3, 6, 1, 4, null, null, null, 2])
         p = find_node_in_bst(root, 4)
         expected = 5
-        result = Solution().inorderSuccessor(root, p)
-        self.assertEqual(result.val, expected)
+        result = Solution().inorderSuccessor(root, p)  # type: ignore
+        self.assertEqual(result.val, expected)  # type: ignore
 
     def test_case_5(self):
         # fmt: off
         root = list_to_tree([41,37,44,24,39,42,48,1,35,38,40,null,43,46,49,0,2,30,36,null,null,null,null,null,null,45,47,null,null,null,null,null,4,29,32,null,null,null,null,null,null,3,9,26,null,31,34,null,null,7,11,25,27,null,null,33,null,6,8,10,16,null,null,null,28,null,null,5,null,null,null,null,null,15,19,null,null,null,null,12,null,18,20,null,13,17,null,null,22,null,14,null,null,21,23])
         # fmt: on
-        print(root.pp())
         p = find_node_in_bst(root, 40)
         expected = 41
-        result = Solution().inorderSuccessor(root, p)
-        self.assertEqual(result.val, expected)
+        result = Solution().inorderSuccessor(root, p)  # type: ignore
+        self.assertEqual(result.val, expected)  # type: ignore
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+
+    def inorderSuccessor(root: "TreeNode", p: "TreeNode") -> "TreeNode":
+
+        successor = None
+
+        while root:
+            print(f"root: {root.val}")
+
+            if p.val >= root.val:
+                root = root.right  # type: ignore
+            else:
+                successor = root
+                root = root.left  # type: ignore
+
+        return successor  # type: ignore
+
+    # fmt: off
+    root = list_to_tree( [ 41, 37, 44, 24, 39, 42, 48, 1, 35, 38, 40, null, 43, 46, 49, 0, 2, 30, 36, null, null, null, null, null, null, 45, 47, null, null, null, null, null, 4, 29, 32, null, null, null, null, null, null, 3, 9, 26, null, 31, 34, null, null, 7, 11, 25, 27, null, null, 33, null, 6, 8, 10, 16, null, null, null, 28, null, null, 5, null, null, null, null, null, 15, 19, null, null, null, null, 12, null, 18, 20, null, 13, 17, null, null, 22, null, 14, null, null, 21, 23, ])
+    # fmt: on
+    p = find_node_in_bst(root, 40)
+    expected = 41
+    result = inorderSuccessor(root, p)  # type: ignore
+    print(result.val, expected)
+    root.pp_rev()
