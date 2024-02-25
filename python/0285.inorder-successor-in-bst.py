@@ -70,13 +70,31 @@ class Solution:
                     return node
                 return find_parent(val, node.right)
 
+        def get_upleftmost(node: TreeNode) -> Optional[TreeNode]:
+            """just keep going up and to the left"""
+            curr = node
+            parent = find_parent(curr.val, root)
+            if parent is None:
+                return None
+            while parent.right == curr:
+                parent = find_parent(curr.val, root)
+                if parent is None:
+                    return None
+                curr = parent
+            return curr
+
         if p.right is None:
             parent = find_parent(p.val, root)
-            if parent and p == parent.left:
+            if parent is None:
+                return None
+            elif p == parent.left:
                 return parent
             else:
-                return None
-        if p.right.left is None:
+                nw_parent = get_upleftmost(parent)
+                if nw_parent is None:
+                    return None
+                return find_parent(nw_parent.val, root)
+        elif p.right.left is None:
             return p.right
         return smallest_child(p.right)
 
@@ -101,14 +119,14 @@ class TestSolution(unittest.TestCase):
         p = find_node_in_bst(root, 1)
         expected = 2
         result = Solution().inorderSuccessor(root, p)
-        self.assertEqual(result, expected)
+        self.assertEqual(result.val, expected)
 
     def test_case_2(self):
-        root = list_to_tree([5, 3, 6, 2, 4, null, null, 1])
+        root = list_to_tree([5, 3, 6, 2, 4, null, null, 1, None])
         p = find_node_in_bst(root, 6)
         expected = None
         result = Solution().inorderSuccessor(root, p)
-        self.assertEqual(result.val, expected)
+        self.assertEqual(result, expected)
 
     def test_case_3(self):
         root = list_to_tree([0])
@@ -119,10 +137,20 @@ class TestSolution(unittest.TestCase):
 
     def test_case_4(self):
         root = list_to_tree([5, 3, 6, 1, 4, null, null, null, 2])
-        p = 4
+        p = find_node_in_bst(root, 4)
         expected = 5
         result = Solution().inorderSuccessor(root, p)
-        self.assertEqual(result, expected)
+        self.assertEqual(result.val, expected)
+
+    def test_case_5(self):
+        # fmt: off
+        root = list_to_tree([41,37,44,24,39,42,48,1,35,38,40,null,43,46,49,0,2,30,36,null,null,null,null,null,null,45,47,null,null,null,null,null,4,29,32,null,null,null,null,null,null,3,9,26,null,31,34,null,null,7,11,25,27,null,null,33,null,6,8,10,16,null,null,null,28,null,null,5,null,null,null,null,null,15,19,null,null,null,null,12,null,18,20,null,13,17,null,null,22,null,14,null,null,21,23])
+        # fmt: on
+        print(root.pp())
+        p = find_node_in_bst(root, 40)
+        expected = 41
+        result = Solution().inorderSuccessor(root, p)
+        self.assertEqual(result.val, expected)
 
 
 if __name__ == "__main__":
