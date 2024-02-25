@@ -79,9 +79,7 @@ class TreeNode:
             print(line)
 
     def pp(self) -> None:
-        print_tree(self, nameattr="val", left_child="left", right_child="right")
-
-    def pp_rev(self) -> str:
+        """left and right are swapped because that prints better."""
         print_tree(self, nameattr="val", left_child="right", right_child="left")
 
     def __repr__(self):
