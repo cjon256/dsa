@@ -81,6 +81,9 @@ class TreeNode:
     def pp(self) -> None:
         print_tree(self, nameattr="val", left_child="left", right_child="right")
 
+    def pp_rev(self) -> str:
+        print_tree(self, nameattr="val", left_child="right", right_child="left")
+
     def __repr__(self):
         return f"TreeNode({self.val})"
 
