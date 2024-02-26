@@ -45,22 +45,26 @@ from typing import List
 #  start_marker
 class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
-        for r in matrix:
-            r.reverse()
-        # print(matrix)
-        num_rows = len(matrix)
-        num_cols = len(matrix[0])
-        last_this_row = len(matrix[0])
-        for row in range(num_rows):
-            for col in range(last_this_row):
-                pair_row = num_cols - col - 1
-                pair_col = num_rows - row - 1
-                # print(f"swap mat[{row}][{col}] <-> matrix[{pair_row}][{pair_col}]")
-                matrix[row][col], matrix[pair_row][pair_col] = (
-                    matrix[pair_row][pair_col],
-                    matrix[row][col],
-                )
-            last_this_row -= 1
+        def reverse_rows(mat):
+            for r in mat:
+                r.reverse()
+            return mat
+
+        def mirror(mat):
+            num_rows = len(mat)
+            num_cols = len(mat[0])
+            last_this_row = len(mat[0])
+            for row in range(num_rows):
+                for col in range(last_this_row):
+                    pair_row = num_cols - col - 1
+                    pair_col = num_rows - row - 1
+                    mat[row][col], mat[pair_row][pair_col] = (
+                        mat[pair_row][pair_col],
+                        mat[row][col],
+                    )
+                last_this_row -= 1
+
+        mirror(reverse_rows(matrix))
         #  end_marker
 
 
@@ -71,13 +75,13 @@ class TestSolution(unittest.TestCase):
     def test_case_1(self):
         matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
         expected = [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
-        result = self.s.rotate(matrix)
+        self.s.rotate(matrix)
         self.assertEqual(matrix, expected)
 
     def test_case_2(self):
         matrix = [[5, 1, 9, 11], [2, 4, 8, 10], [13, 3, 6, 7], [15, 14, 12, 16]]
         expected = [[15, 13, 2, 5], [14, 3, 4, 1], [12, 6, 8, 9], [16, 7, 10, 11]]
-        result = self.s.rotate(matrix)
+        self.s.rotate(matrix)
         self.assertEqual(matrix, expected)
 
 
