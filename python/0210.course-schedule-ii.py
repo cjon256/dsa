@@ -72,12 +72,33 @@ class Solution:
         prereq_dict: DefaultDict = defaultdict(lambda: [])
         for cp in prerequisites:
             class_, prereq = cp
-            prereq_dict[class_].append(prereq)
+            prereq_dict[prereq].append(class_)
             in_degree[class_] += 1
 
         print(prereq_dict)
         print(in_degree)
         print(taken)
+
+        while not all(taken):
+            classes_with_no_prereqs = [
+                i for i, c in enumerate(in_degree) if c == 0 and taken[i] is False
+            ]
+            print(f"classes_with_no_prereqs: {classes_with_no_prereqs}")
+            if not classes_with_no_prereqs:
+                return []
+            for c in classes_with_no_prereqs:
+
+                print(f"c is {c} dammit")
+                fulfilled_list = prereq_dict[c]
+                for v in fulfilled_list:
+                    print(f"decreasing in_degree for {v}")
+                    in_degree[v] -= 1
+                res.append(c)
+                taken[c] = True
+                print(f"class taken {c}")
+            print(prereq_dict)
+            print(in_degree)
+            print(taken)
 
         return res
 
@@ -88,6 +109,27 @@ class TestSolution(unittest.TestCase):
         numCourses = 2
         prerequisites = [[1, 0]]
         expected = [0, 1]
+        result = Solution().findOrder(numCourses, prerequisites)
+        self.assertEqual(result, expected)
+
+    def test_case_2(self):
+        numCourses = 4
+        prerequisites = [[1, 0], [2, 0], [3, 1], [3, 2]]
+        expected = [0, 1, 2, 3]
+        result = Solution().findOrder(numCourses, prerequisites)
+        self.assertEqual(result, expected)
+
+    def test_case_3(self):
+        numCourses = 1
+        prerequisites = []
+        expected = [0]
+        result = Solution().findOrder(numCourses, prerequisites)
+        self.assertEqual(result, expected)
+
+    def test_case_4(self):
+        numCourses = 2
+        prerequisites = [[1, 0], [0, 1]]
+        expected = []
         result = Solution().findOrder(numCourses, prerequisites)
         self.assertEqual(result, expected)
 
