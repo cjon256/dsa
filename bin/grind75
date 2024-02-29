@@ -234,7 +234,7 @@ def print_all(filter=lambda _: True):
             chk = "✔"
         else:
             chk = " "
-        name = entry["line"][14:64].strip()
+        name = entry["line"][14:74].strip()
         hardness = entry["line"][75:].strip()
         result = f"{k:04} {priv} {chk} {name:60} {hardness}"
         if filter(entry):
@@ -242,7 +242,7 @@ def print_all(filter=lambda _: True):
 
 
 def usage():
-    print("Usage: neetcode [next|undone]")
+    print("Usage: grind75 [next|undone]")
     print("  next: return the first grind75 problem that is not checked")
     print("  undone: return all grind75 problems that are not checked")
     print("  no argument: return all grind75 problems")

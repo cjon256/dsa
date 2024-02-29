@@ -1,0 +1,300 @@
+#!env python3
+
+import os
+import sys
+from typing import Any, List
+
+# fmt: off
+leetpatt = [
+    [1, "Contains Duplicate", "Easy", "Arrays", "Amazon Apple Google Uber Bloomberg Microsoft Facebook Adobe Yahoo TCS" ],
+    [2, "Missing Number", "Easy", "Arrays, Bit Manipulation", "Amazon Adobe Warner Media Microsoft Google Apple Nvidia Bloomberg Uber" ],
+    [3, "Find All Numbers Disappeared in an Array", "Easy", "Arrays", "Facebook" ],
+    [4, "Single Number", "Easy", "Arrays, Bit Manipulation", "Amazon Adobe Google Apple Bloomberg Zoho Yandex Facebook Yahoo" ],
+    [5, "Climbing Stairs", "Easy", "Dynamic Programming", "Amazon Apple Zoho Google Adobe Microsoft Facebook Yahoo Bloomberg Accenture Nvidia Oracle TikTok Accolite JPMorgan AMD Uber Swiggy Turing" ],
+    [6, "Best Time to Buy and Sell Stock", "Easy", "Greedy", "Amazon Microsoft Apple Facebook Uber Adobe Google Nvidia IBM Zoho Accenture Goldman Sachs Media.net TCS TikTok Bloomberg Yahoo Walmart Labs Yandex Bolt Tinkoff Pay Pal SAP Trip Advisor Salesforce Visa DRW Groww Snapchat Morgan Stanley Intel Infosys Wealthfront Akamai Josh Technology" ],
+    [7, "Range Sum Query - Immutable", "Easy", "Dynamic Programming", "Facebook Amazon" ],
+    [8, "Counting Bits", "Easy", "Dynamic Programming, Bit Manipulation", "Amazon Uber Bloomberg Adobe" ],
+    [9, "Linked List Cycle", "Easy", "Fast & Slow Pointers", "Amazon Apple Adobe Google Microsoft Bloomberg Goldman Sachs Uber" ],
+    [10, "Middle of the Linked List", "Easy", "Fast & Slow Pointers", "Amazon Bloomberg Adobe Google Uber Apple" ],
+    [11, "Reverse Linked List", "Easy", "In-place reversal of a linked list", "Amazon Microsoft Apple Adobe Yandex Bloomberg Google TikTok" ],
+    [12, "Palindrome Linked List", "Easy", "Fast & Slow Pointers", "Facebook Adobe Amazon Uber Microsoft Apple Yandex Bloomberg Google" ],
+    [13, "Remove Linked List Elements", "Easy", "Fast & Slow Pointers", "Amazon Facebook Bloomberg Adobe Apple" ],
+    [14, "Remove Duplicates from Sorted List", "Easy", "Fast & Slow Pointers", "Uber Amazon Adobe Google Apple" ],
+    [15, "Merge Two Sorted Lists", "Easy", "Two Pointers", "Amazon Google Microsoft Facebook Media.net Adobe Yahoo Apple Bloomberg Hubspot Oracle Uber Yandex Snapchat EPAM Systems TikTok Expedia" ],
+    [16, "Meeting Rooms", "Easy", "Intervals", "Palo Alto Networks Googlee Bay Apple" ],
+    [17, "Binary Search", "Easy", "Binary Search", "Microsoft Apple Amazon Adobe Bloomberg" ],
+    [18, "Find Smallest Letter Greater Than Target", "Easy", "Binary Search", "Amazon" ],
+    [19, "Average of Levels in Binary Tree", "Easy", "BFS", "Facebook" ],
+    [20, "Minimum Depth of Binary Tree", "Easy", "BFS, DFS", "Facebook Amazon Google" ],
+    [21, "Same Tree", "Easy", "DFS", "Amazon Google Linked-in Microsoft" ],
+    [22, "Path Sum", "Easy", "DFS", "Amazon Microsoft Bloomberg TikTok Facebook Adobe" ],
+    [23, "Maximum Depth of Binary Tree", "Easy", "DFS", "Amazon Apple Google Adobe Yandex Yahoo SAP" ],
+    [24, "Diameter of Binary Tree", "Easy", "DFS", "Facebook Amazon Google Apple Adobe" ],
+    [25, "Merge Two Binary Trees", "Easy", "DFS", "Facebook Mongo DBAmazon Yahoo" ],
+    [26, "Subtree of Another Tree", "Easy", "DFS", "Amazon Uber TikTok" ],
+    [27, "Invert Binary Tree", "Easy", "DFS", "Google Amazon Apple Oracle" ],
+    [28, "Two Sum", "Easy", "Two Pointers", "Amazon Google Adobe Apple Bloomberg Microsoft Facebook Uber Yahoo Yandex Oracle Spotify Zoho Nvidia ServiceNow TCS Tinkoff Deloitte Barclays Huawei Cisco IBMwipro Door Dash Accenture Capgemini BNY Mellon TikTok Morgan Stanley Visa ZScaler Cognizant Luxoft CVENTCareem" ],
+    [29, "Squares of a Sorted Array", "Easy", "Two Pointers", "Facebook Yandex Google Amazon Bloomberg Tinkoff Yahoo" ],
+    [30, "Backspace String Compare", "Easy", "Two Pointers", "Goldman Sachs Booking.com TikTok Grammarly Tinkoff Google Amazon Oracle" ],
+    [31, "Index Pairs of a String", "Easy", "Trie", "" ],
+    [32, "Majority Element", "Easy", "Sorting", "Amazon Apple Bloomberg Google Adobe Facebook Uber Nvidia Salesforce Pwc Microsofte Bay Yandex Media.net" ],
+    [33, "Convert 1D Array Into 2D Array", "Easy", "Arrays", "Amazon" ],
+    [34, "Move Zeroes", "Easy", "Arrays, Two Pointers", "Facebook Zoho Apple Amazon Yandexe Bay Google Oracle Yahoo Uber Adobe ServiceNow Tesla TikTok Cognizant Ozon" ],
+    [35, "Is Subsequence", "Easy", "Two Pointers", "Amazon Pinterest Salesforce Google Adobe Bloomberg Yandex Accenture Microsoft Yahoo" ],
+    [36, "Binary Tree Paths", "Easy", "DFS, Backtracking", "Google Apple" ],
+    [37, "Maximum Average Subarray I", "Easy", "Sliding Window", "Apple Amazon Adobe Google Facebook" ],
+    [38, "Product of Array Except Self", "Medium", "Arrays", "Amazon Asana Apple Bloomberg Facebook Microsoft Adobe Yandex Google Uber TikTok Warnermedia Yahoo Intuit Cisco Accenture Docusign" ],
+    [39, "Find the Duplicate Number", "Medium", "Arrays, Binary Search, Two Pointers", "Amazon Apple Yahoo Microsoft Citadel Uber Adobe Facebook Zoho Nvidia Bloomberg Goldman Sachs Phone Pe" ],
+    [40, "Find All Duplicates in an Array", "Medium", "Arrays", "Apple Amazon" ],
+    [41, "Set Matrix Zeroes", "Medium", "Arrays", "Amazon Facebook Adobe Microsoft Google Oracle Apple Uber Sprinklr" ],
+    [42, "Spiral Matrix", "Medium", "Arrays", "Amazon Apple TikTok Microsoft Adobe Google Yahoo Cisco Uber Walmart Labs Make My Trip Epic Systems Facebook Oracle Zoho DE Shaw Flipkart Accenture" ],
+    [43, "Rotate Image", "Medium", "Arrays", "Amazon Cisco Apple Google Adobe Bloomberg Facebook Yahoo Uber Microsoft Nvidia ZScaler Zoho TikTok" ],
+    [44, "Word Search", "Medium", "Backtracking", "Facebook Bloomberg Microsoft Google Uber Amazon Snapchat TikTok Capital One Walmart Labs Oracle Apple Cisco" ],
+    [45, "Longest Consecutive Sequence", "Medium", "Arrays", "Amazon Adobe Bloomberg Google Microsoft Apple Uber Yahoo Facebook Turing" ],
+    [46, "Letter Case Permutation", "Medium", "Backtracking", "Apple" ],
+    [47, "Subsets", "Medium", "Backtracking", "Facebook Apple Amazon TikTok Microsoft Yahoo Adobe Google Bloomberg Uber" ],
+    [48, "Subsets II", "Medium", "Backtracking", "Bloomberg Yahoo Amazon Microsoft Google TikTok Flipkart" ],
+    [49, "Permutations", "Medium", "Backtracking", "Amazon Adobe Apple TikTok Google Bloomberg Citadel Microsoft Facebook Yahoo Goldman Sachs" ],
+    [50, "Permutations II", "Medium", "Backtracking", "TikTok Facebook" ],
+    [51, "Combinations", "Medium", "Backtracking", "Amazon Adobe Microsoft" ],
+    [52, "Combination Sum", "Medium", "Backtracking", "Airbnb TikTok Amazon Facebook Microsoft Google Yahoo Apple Oracle Salesforce Adobe" ],
+    [53, "Combination Sum II", "Medium", "Backtracking", "TikTok Facebook Amazon Adobe Uber Google Bloomberg" ],
+    [54, "Combination Sum III", "Medium", "Backtracking", "Adobe" ],
+    [55, "Generate Parentheses", "Medium", "Backtracking", "Amazon Google Uber Adobe Yahoo Apple ServiceNow Bloomberg Facebook Microsoft Yandex TikTok JPMorgan Lucid Tesla Visa" ],
+    [56, "Target Sum", "Medium", "Backtracking, DFS, Dynamic Programming", "Facebook Amazon Bloomberg Apple Google" ],
+    [57, "Palindrome Partitioning", "Medium", "Backtracking", "Apple Amazon Adobe Yahoo Uber" ],
+    [58, "Letter Combinations of a Phone Number", "Medium", "Backtracking", "Facebook Amazon Epic Systems Adobe Apple Microsoft Google Tesla Pinterest Bloomberg IBMZoho Uber DE Shaw" ],
+    [59, "Generalized Abbreviation", "Medium", "Backtracking", "" ],
+    [60, "House Robber", "Medium", "Dynamic Programming", "Apple Amazon Cisco Google Microsoft Adobe Bloomberg TikTok Linked-in Goldman Sachs Byte Dance Databricks Yahoo Tesla Uber Facebook Citadel Agoda Sigmoid" ],
+    [61, "Maximum Subarray", "Medium", "Dynamic Programming", "Amazon Microsoft Apple Bloomberg TikTok Goldman Sachs Cisco Adobe Walmart Labs Uber TCS Linked-in Google Facebook JPMorgan Oracle ServiceNow DE Shaw" ],
+    [62, "House Robber II", "Medium", "Dynamic Programming", "Amazon Databricks Phone Pe Google Microsoft TikTok Adobe Yahoo Linked-in Bloomberg" ],
+    [63, "Coin Change", "Medium", "Dynamic Programming", "Bloomberg Amazon Yahoo Google Microsoft Adobe Datadog Apple Airbnb TikTok" ],
+    [64, "Maximum Product Subarray", "Medium", "Dynamic Programming", "Amazon Wayfair Adobe Microsoft Uber Linked-in Bloomberg Apple Facebook TikTok" ],
+    [65, "Longest Increasing Subsequence", "Medium", "Dynamic Programming", "Amazon Oracle Google Apple TikTok Goldman Sachs Facebook Commvault Yandex Microsoft Accenture Booking.com Uber Adobe IBMAtlassian Bloomberg Intuit Pure Storage" ],
+    [66, "Longest Palindromic Substring", "Medium", "Dynamic Programming", "Amazon Apple Google Adobe Cisco Microsoft Uber Facebook TikTok Yahoo Walmart Labs Oracle Wayfair Byte Dance Bloomberg Goldman Sachs Yandex JPMorgan Tinkoff Salesforce Media.net" ],
+    [67, "Word Break", "Medium", "Dynamic Programming", "Salesforce Facebook Amazon Microsoft TikTok Bloomberg Adobe Apple Oraclee Bay Google Tesla Flipkart" ],
+    [68, "Combination Sum IV", "Medium", "Dynamic Programming", "" ],
+    [69, "Decode Ways", "Medium", "Dynamic Programming", "Amazon Apple Microsoft Google Bloomberg Salesforce TikTok Commvault Facebook Uber Goldman Sachs Snapchat Oracle Flipkart" ],
+    [70, "Unique Paths", "Medium", "Dynamic Programming", "Amazon Apple Google Adobe Microsoft Uber" ],
+    [71, "Jump Game", "Medium", "Dynamic Programming, Greedy", "Amazon Adobe Uber Door Dash TikTok Apple Google Microsoft Facebook Oracle Yahoo Media.net Make My Trip Bloomberg Infosys" ],
+    [72, "Palindromic Substrings", "Medium", "Dynamic Programming", "Facebook Amazon Goldman Sachs Apple Citadel Accenture Google Adobe Bloomberg Cisco" ],
+    [73, "Number of Longest Increasing Subsequence", "Medium", "Dynamic Programming", "Commvault" ],
+    [74, "Partition Equal Subset Sum", "Medium", "Dynamic Programming", "Google Amazon Facebook Yahoo TikTok" ],
+    [75, "Partition to K Equal Sum Subsets", "Medium", "Dynamic Programming", "Facebook Adobe Amazon Byte Dance" ],
+    [76, "Best Time to Buy and Sell Stock with Cooldown", "Medium", "Dynamic Programming", "Amazon Apple Visa" ],
+    [77, "Linked List Cycle II", "Medium", "Fast & Slow Pointers", "TikTok Google Adobe" ],
+    [78, "Add Two Numbers", "Medium", "Fast & Slow Pointers", "Amazon Google Bloomberg Apple Adobe Microsoft Avito Nvidia Yandex Oracle Facebook Uber Yahoo Cisco Arista Networks" ],
+    [79, "Remove Nth Node From End of List", "Medium", "Fast & Slow Pointers", "Facebook Amazon Microsoft Apple Adobe Oracle Google Nvidia Yahoo" ],
+    [80, "Sort List", "Medium", "Fast & Slow Pointers", "Amazon Yahoo Byte Dance TikTok Apple Adobe Google" ],
+    [81, "Reorder List", "Medium", "Fast & Slow Pointers", "Adobe Amazon Bloomberg Google Microsoft Apple Arista Networks Uber" ],
+    [82, "Clone Graph", "Medium", "BFS, DFS, Graph", "Facebook Amazon Thousand Eyes Docusign Adobe Apple" ],
+    [83, "Pacific Atlantic Water Flow", "Medium", "BFS, DFS", "Google TikTok Uber Adobe Nutanix Intuit" ],
+    [84, "Number of Islands", "Medium", "BFS, DFS, Union Find", "Facebook Amazon TikTok Bloomberg Microsoft Google Linked-in Yandex Oracle Goldman Sachs Walmart Labs Uber Applee Bay Salesforce Turing Cruise Automation Adobe Citadel Tesla Byte Dance Yahoo Pay Pal Square ServiceNow Bit Go Ozon" ],
+    [85, "Graph Valid Tree", "Medium", "BFS, DFS, Graph, Union Find", "Salesforce Facebook Snowflake" ],
+    [86, "Number of Connected Components in an Undirected Graph", "Medium", "BFS, DFS, Graph, Union Find", "Google" ],
+    [87, "Reverse Linked List II", "Medium", "In-place reversal of a linked list", "Amazon Adobe Facebook TikTok Microsoft Arista Networks Nvidia Apple Google" ],
+    [88, "Rotate List", "Medium", "In-place reversal of a linked list", "Amazon Adobe Apple Bloomberg" ],
+    [89, "Swap Nodes in Pairs", "Medium", "In-place reversal of a linked list", "Bloomberg Amazon Apple Adobe Google Flipkart" ],
+    [90, "Odd Even Linked List", "Medium", "In-place reversal of a linked list", "Apple Microsoft Amazon Adobe TikTok Uber" ],
+    [91, "Kth Smallest Element in a Sorted Matrix", "Medium", "Binary Search, Heap", "Facebook Salesforce Oracle TikTok Uber" ],
+    [92, "Find K Pairs with Smallest Sums", "Medium", "Heap", "" ],
+    [93, "Merge Intervals", "Medium", "Intervals", "Facebook Bloomberg Amazon Microsoft Apple Google TikTok Oracle Roblox Tesco Linked-in Adobe Netflix Yahoo Yandex Morgan Stanley JPMorgan Cisco Uber Nvidia IXLOzon Netskope Turing Docusign Walmart Labs ServiceNow Atlassian Accenture Grammarly" ],
+    [94, "Interval List Intersections", "Medium", "Intervals", "Facebook Yandex Uber Verkada Amazon Bloomberg" ],
+    [95, "Non-overlapping Intervals", "Medium", "Intervals", "Facebook Amazon JPMorgan Google Apple" ],
+    [96, "Meeting Rooms II", "Medium", "Heap, Intervals", "Facebook IBMBloomberg TikTok Google Microsoft Amazon Oracle Apple Pinterest Yandex Nordstrom Snapchat Salesforce Goldman Sachs Miro" ],
+    [97, "Task Scheduler", "Medium", "Greedy, Heap", "TikTok Amazon Bloomberg Salesforcezeta suitezeta" ],
+    [98, "Minimum Number of Arrows to Burst Balloons", "Medium", "Greedy", "" ],
+    [99, "Insert Interval", "Medium", "Intervals", "Amazon Facebook Google Apple Adobe Bloomberg TikTok Microsoft" ],
+    [100, "Peak Index in a Mountain Array", "Medium", "Binary Search", "Amazon Adobe Bloomberg Apple" ],
+    [101, "Find Minimum in Rotated Sorted Array", "Medium", "Binary Search", "Goldman Sachs Microsoft Amazon Google Applee Bay Adobe TikTok Facebook Arista Networks" ],
+    [102, "Find Peak Element", "Medium", "Binary Search", "Facebook Amazon Apple Adobe TikTok Google Bloomberg Microsoft Uber Snapchat" ],
+    [103, "Search in Rotated Sorted Array", "Medium", "Binary Search", "Amazon Facebook TikTok Microsoft Apple Bloomberg Google Linked-in Uber Arcesium Oracle Yahooe Bay Adobe Salesforce Byte Dance Yandex ServiceNow Navi VMware" ],
+    [104, "Search in Rotated Sorted Array II", "Medium", "Binary Search", "Apple Amazon Microsoft Bloomberg Adobe Uber" ],
+    [105, "Search a 2D Matrix", "Medium", "Binary Search", "Amazon Facebook Google Apple Goldman Sachs Microsoft Yahoo Bloomberg Adobe Coupang" ],
+    [106, "Search a 2D Matrix II", "Medium", "Binary Search", "Amazon Facebook Apple Google Adobe Oracle" ],
+    [107, "Find K Closest Elements", "Medium", "Binary Search", "Facebook Yandex Door Dash Amazon Linked-in Apple Yahoo TikTok Uber Adobe" ],
+    [108, "Minimum Size Subarray Sum", "Medium", "Sliding Window", "TikTok Amazon Facebook Goldman Sachs Oracle Yahoo" ],
+    [109, "Fruit Into Baskets", "Medium", "Sliding Window", "Facebook Amazon Google" ],
+    [110, "Permutation in String", "Medium", "Sliding Window", "Yandex Amazon Google Adobe Apple Bloomberg" ],
+    [111, "Longest Repeating Character Replacement", "Medium", "Sliding Window", "Google TikTok Facebook Amazon Adobe Apple Uber Bloomberg Yandex Turing" ],
+    [112, "Longest Substring Without Repeating Characters", "Medium", "Sliding Window", "Amazon Bloomberg Apple Google Microsoft Adobe Facebook Yandex Yahoo Walmart Labs Spotify TikTok Tesla Tinkoff Oracle Salesforce Nvidia Agodae Bay Uber Intuit JPMorgan Flipkart EPAM Systems Turing BNY Mellon Pay Pal Byte Dance Zoho Docusign Accolite" ],
+    [113, "Kth Smallest Element in a BST", "Medium", "DFS", "Bloomberg Uber Amazon Microsoft Apple Adobe Yahoo" ],
+    [114, "K Closest Points to Origin", "Medium", "Heap", "Facebook Amazon Asana Apple" ],
+    [115, "Top K Frequent Elements", "Medium", "Heap", "Facebook Amazon Apple Avito Microsoft Uber Netflix TikTok Yandex Bloomberg Google Adobe Snapchat Salesforce Tesla Docusign Dropbox" ],
+    [116, "Sort Characters By Frequency", "Medium", "Heap", "Apple Facebook Adobe Amazon Google Microsoft" ],
+    [117, "Kth Largest Element in an Array", "Medium", "Heap, Quick Select", "Facebook Amazon TikTok Bloomberg Linked-in Google Adobe Salesforce Yahoo Nvidia Microsoft Applee Bay Byte Dance Uber Deutsche Bank Netflix" ],
+    [118, "Reorganize String", "Medium", "Greedy, Heap", "Amazon Pinterest Roblox TikTok Facebook Adobe Google Microsoft Oracle Apple Uber Yahoo Pay Pal Druva" ],
+    [119, "Course Schedule", "Medium", "BFS, DFS, Graph, Topological Sort", "Facebook Amazon Apple Google TikTok Microsoft Karat Adobe Bloomberg Uber Yahoo Nutanix Byte Dance Oracle" ],
+    [120, "Course Schedule II", "Medium", "BFS, DFS, Graph, Topological Sort", "TikTok Amazon Google Snapchat Facebook Applee Bay Intuit Bloomberg Tesla Microsoft Salesforce Byte Dance Robinhood Workday" ],
+    [121, "Minimum Height Trees", "Medium", "BFS, Graph, Topological Sort", "Facebook Adobe Citadel" ],
+    [122, "Sequence Reconstruction", "Medium", "Graph, Topological Sort", "Google" ],
+    [123, "Binary Tree Level Order Traversal II", "Medium", "BFS", "Amazon" ],
+    [124, "Binary Tree Level Order Traversal", "Medium", "BFS", "Amazon Facebook Bloomberg Uber Microsoft Apple Yahoo TikTok" ],
+    [125, "Binary Tree Zigzag Level Order Traversal", "Medium", "BFS", "Facebook Amazon Microsofte Bay Bloomberg Oracle Walmart Labs Adobe Flipkart" ],
+    [126, "Populating Next Right Pointers in Each Node", "Medium", "BFS", "Bloomberg Facebook Microsoft Amazon Google Walmart Labs Apple Salesforce Snowflake Oracle Flipkart" ],
+    [127, "Populating Next Right Pointers in Each Node II", "Medium", "BFS", "Bloomberg Citadel Walmart Labs Snowflake" ],
+    [128, "Binary Tree Right Side View", "Medium", "BFS, DFS", "Facebook Amazon TikTok Yandex Adobe" ],
+    [129, "All Nodes Distance K in Binary Tree", "Medium", "BFS, DFS", "Facebook Amazon Walmart Labs Google Uber Apple Microsoft Adobe DE Shaw" ],
+    [130, "Lowest Common Ancestor of a Binary Search Tree", "Medium", "DFS", "Amazon Apple Facebook Google" ],
+    [131, "Path Sum II", "Medium", "DFS", "Facebook TikTok" ],
+    [132, "Path Sum III", "Medium", "DFS", "Amazon Flipkart Adobe TikTok" ],
+    [133, "Lowest Common Ancestor of a Binary Tree", "Medium", "DFS", "Facebook Amazon Bloomberg Microsoft Linked-in Adobe Yandex TikTok GE Healthcare Google Pay Pal Yahoo Wayfair" ],
+    [134, "Maximum Binary Tree", "Medium", "DFS", "" ],
+    [135, "Maximum Width of Binary Tree", "Medium", "DFS", "Amazon TikTok Google Facebook Adobe" ],
+    [136, "Construct Binary Tree from Preorder and Inorder Traversal", "Medium", "DFS", "Amazon TikTok Adobe Microsoft Salesforce" ],
+    [137, "Validate Binary Search Tree", "Medium", "DFS", "Amazon Bloomberg Apple TikTok Facebook Yandex SIGMicrosoft Citadel Linked-in Yahoo Nvidia Google Adobe ServiceNow" ],
+    [138, "Implement Trie (Prefix Tree)", "Medium", "Design, Trie", "Google Microsoft Square Amazon Docusign TikTok Samsung" ],
+    [139, "3Sum", "Medium", "Two Pointers", "Facebook Amazon Apple Adobe Google Microsoft Bloomberg Yahoo Agoda TikTok Cloudflare Oracle Uber Cisco Altimetrik Nvidia Yandex ServiceNow Walmart Labs Door Dash Docusign Accenture Sprinklr Rakuten ASUS" ],
+    [140, "3Sum Closest", "Medium", "Two Pointers", "Amazon Adobe Facebook Apple Yahoo" ],
+    [141, "Subarray Product Less Than K", "Medium", "Two Pointers", "ServiceNow Facebook Amazon TikTok SoFi" ],
+    [142, "Sort Colors", "Medium", "Two Pointers", "Microsoft Adobe Google Bloomberg Apple Walmart Labs TikTok Amazon Oracle Yahoo Uber DE Shaw" ],
+    [143, "Container With Most Water", "Medium", "Two Pointers", "Amazon Apple Google Adobe Oracle Yahoo Flipkart TikTok Uber Bloomberg Microsoft Citadel Facebook Goldman Sachse Bay Tesla Bosch" ],
+    [144, "Longest Word in Dictionary", "Medium", "Trie", "" ],
+    [145, "Maximum XOR of Two Numbers in an Array", "Medium", "Trie", "Amazon" ],
+    [146, "Factor Combinations", "Medium", "Arrays, Backtracking", "" ],
+    [147, "Split a String Into the Max Number of Unique Substrings", "Medium", "Backtracking", "" ],
+    [148, "Maximum Number of Vowels in a Substring of Given Length", "Medium", "Sliding Window", "Amazon Apple" ],
+    [149, "Max Consecutive Ones III", "Medium", "Sliding Window", "Facebook Amazon Google TCS Yandex Oracle Snapchat" ],
+    [150, "Longest Subarray of 1's After Deleting One Element", "Medium", "Sliding Window, Dynamic Programming", "Yandex Apple Amazon Tinkoff Adobe" ],
+    [151, "First Missing Positive", "Hard", "Arrays", "Amazon Netflix Microsoft Apple Google Facebook Morgan Stanley Nutanix Oracle Make My Trip Roblox Adobe Databricks Bloomberg" ],
+    [152, "Sudoku Solver", "Hard", "Backtracking", "Apple Google Citadel Adobe Microsoft Amazon Riot Games Door Dash Intuit Cadence Oracle" ],
+    [153, "N-Queens", "Hard", "Backtracking", "Amazon TikTok Goldman Sachs Facebook Google Apple Citadel Uber Adobe" ],
+    [154, "Reverse Nodes in k-Group", "Hard", "In-place reversal of a linked list", "TikTok Amazon Snowflake Commvault Google Microsoft Uber Tesla Apple Adobe Make My Trip Fortinet" ],
+    [155, "Merge k Sorted Lists", "Hard", "Heap", "Facebook Amazon TikTok Google Bloomberg Apple Yandex Microsoft Oracle Tesla Adobe Palantir Technologies Warnermedia e Bay" ],
+    [156, "Smallest Range Covering Elements from K Lists", "Hard", "Heap", "Flipkart Amazon Snapchat Apple" ],
+    [157, "Employee Free Time", "Hard", "Heap, Greedy", "Google" ],
+    [158, "Count of Range Sum", "Hard", "Binary Search", "Amazon" ],
+    [159, "Sliding Window Maximum", "Hard", "Sliding Window", "Facebook Amazon Adobe Microsoft Apple Google Goldman Sachs Booking.com Uber Yandex Bloomberg Oracle Roku Citadel TikTok" ],
+    [160, "Minimum Number of K Consecutive Bit Flips", "Hard", "Sliding Window", "Google" ],
+    [161, "Count Unique Characters of All Substrings of a Given String", "Hard", "Sliding Window", "Amazon Microsoft" ],
+    [162, "Minimum Window Substring", "Hard", "Sliding Window", "Facebook Amazon TikTok Lyft Adobe Yandex Google Apple Snapchat Nagarro Byte Dance" ],
+    [163, "Substring with Concatenation of All Words", "Hard", "Sliding Window", "Media.net Amazon" ],
+    [164, "Rearrange String k Distance Apart", "Hard", "Greedy, Heap", "" ],
+    [165, "Course Schedule III", "Hard", "Greedy, Heap", "" ],
+    [166, "Maximum Frequency Stack", "Hard", "Bucket Sort, Heap", "Pay Pal Amazon" ],
+    [167, "Alien Dictionary", "Hard", "Graph, Topological Sort", "Facebook Amazon TikTok Google Airbnb Phone Pe" ],
+    [168, "Binary Tree Maximum Path Sum", "Hard", "DFS", "Door Dash Citadel Facebook Amazon TikTok Apple Adobe Yandex Booking.com Snapchat Salesforce Patreon Uber" ],
+    [169, "Serialize and Deserialize Binary Tree", "Hard", "Design", "Microsoft Door Dash Facebook Linked-in Amazon Citadel TikTok Qumulo Yahoo Tesla" ],
+    [170, "Word Search II", "Hard", "DFS, Trie", "Facebook Amazon Cisco Microsoft Two Sigma Ubere Bay Google Snowflake Capital One Apple" ],
+    [171, "Find Median from Data Stream", "Hard", "Heap", "Amazon Facebook Google Apple Pinterest Microsoft Uber Bloomberg Oracle IXLAdobe TikTok" ],
+    [172, "Sliding Window Median", "Hard", "Heap", "Facebook Flipkart Amazon Snowflake" ],
+    [173, "Trapping Rain Water", "Hard", "Two Pointers", "Amazon Goldman Sachs Apple Bloomberg Adobe Google Facebook Microsoft Uber Yandex Walmart Labs ServiceNow TikTok Zoho Intuit Flipkart Nvidia Salesforce Oracle Citadel Yahoo Media.net Intel Samsung Cisco MAQ Software" ],
+    [174, "Concatenated Words", "Hard", "Trie", "Amazon" ],
+    [175, "Prefix and Suffix Search", "Hard", "Trie", "TikTok" ],
+    [176, "Palindrome Pairs", "Hard", "Trie", "Airbnb" ],
+    [177, "Design Search Autocomplete System", "Hard", "Trie", "Bloomberg Pinterest Remitly TikTok" ],
+    [178, "Word Squares", "Hard", "Trie", "" ],
+    [179, "Sort Items by Groups Respecting Dependencies", "Hard", "DFS, Graph, Topological Sort", "" ],
+    [180, "Median of Two Sorted Arrays", "Hard", "Binary Search", "Amazon Apple Adobe Goldman Sachs Google Microsoft Bloomberg Facebook Uber Rippling TikTok VMware Yahoo Linked-ine Bay" ],
+]
+# fmt: on
+
+# get the output of leetcode list
+leetcode_list = os.popen("leetcode list").read().split("\n")
+
+""" leetcode list now looks like this:
+      ✔ [  1 ] Two Sum                                                      Easy   (51.64 %)
+        [  2 ] Add Two Numbers                                              Medium (42.08 %)
+        [  3 ] Longest Substring Without Repeating Characters               Medium (34.39 %)
+        [  4 ] Median of Two Sorted Arrays                                  Hard   (39.07 %)
+        [  5 ] Longest Palindromic Substring                                Medium (33.51 %)
+        [  6 ] Zigzag Conversion                                            Medium (47.05 %)
+        [  7 ] Reverse Integer                                              Medium (28.25 %)
+        [  8 ] String to Integer (atoi)                                     Medium (17.01 %)
+        [  9 ] Palindrome Number                                            Easy   (55.40 %)
+        [ 10 ] Regular Expression Matching                                  Hard   (28.04 %)
+...
+        [3017] Count the Number of Houses at a Certain Distance II          Hard   (17.02 %)
+  🔒    [3018] Maximum Number of Removal Queries That Can Be Processed I    Hard   (52.27 %)
+
+        Listed: 2936     Locked: 574      Starred: 0
+        Accept: 47       Not-Ac: 0        Remain:  2889
+        Easy  : 717      Medium: 1557     Hard:    662
+
+"""
+LOCK = "🔒"  # note that this is double-wide
+CHK = "✔"
+
+leetcode_dict = {}
+leetcode_by_name = {}
+for i in leetcode_list:
+    if i:
+        if "[" not in i:
+            continue
+        locked = LOCK in i
+        checked = CHK in i
+        number = i.split("[")[1].split("]")[0].strip()
+        name = i[14:74].strip()
+        hardness = i[75:].strip()
+        entry = {
+            "line": i,
+            "name": name,
+            "hardness": hardness,
+            "checked": checked,
+            "locked": locked,
+            "number": number,
+        }
+        leetcode_dict[int(number)] = entry
+        leetcode_by_name[name] = int(number)
+
+
+patt: List[Any]
+for patt in leetpatt:
+    number, name, hardness, topics, companies = patt
+    leet_num = leetcode_by_name.get(name, None)
+    leet_info = leetcode_dict[leet_num]
+    if leet_info["locked"]:
+        priv = "🔒"
+    else:
+        priv = "  "
+    if leet_info["checked"]:
+        chk = "✔"
+    else:
+        chk = " "
+    name_num = f"{name:54}[{leet_num:04d}]"
+    result = (
+        f"{number: 4d} {priv} {chk} {name_num:60} {topics:32} {hardness:6} {companies}"
+    )
+    print(result)
+
+# def print_all(filter=lambda _: True):
+#     for k in neetcode:
+#         number, name, section = k
+#         entry = leetcode_dict[int(number)]
+#         if entry["locked"]:
+#             priv = "🔒"
+#         else:
+#             priv = "  "
+#         if entry["checked"]:
+#             chk = "✔"
+#         else:
+#             chk = " "
+#         result = f"{number} {priv} {chk} {name:60} {section:32} {hardness}"
+#         if filter(entry):
+#             print(result)
+#
+#
+# def usage():
+#     print("Usage: neetcode [next|undone]")
+#     print("  next: return the first grind75 problem that is not checked")
+#     print("  undone: return all grind75 problems that are not checked")
+#     print("  no argument: return all grind75 problems")
+#     sys.exit(1)
+#
+#
+# # return first grind75 problem that is not checked if argeumnet is 'next'
+# if len(sys.argv) > 1:
+#     if sys.argv[1] == "next":
+#         for j in neetcode:
+#             number, name, section = j
+#             n = int(number)
+#             entry = leetcode_dict[n]
+#             if not entry["checked"]:
+#                 print(n)
+#                 break
+#     elif sys.argv[1] == "undone":
+#         print_all(filter=lambda x: not x["checked"])
+#     else:
+#         usage()
+# else:
+#     print_all()
