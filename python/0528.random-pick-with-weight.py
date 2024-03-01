@@ -88,9 +88,7 @@ class Solution:
     def pickIndex(self) -> int:
         val = random.randint(1, self._lenw)
         return bisect_left(self._w, val)
-
-
-#  end_marker
+        #  end_marker
 
 
 class TestSolution(unittest.TestCase):
@@ -105,6 +103,36 @@ class TestSolution(unittest.TestCase):
         self.assertAlmostEqual(cnt[1] / 100000, 14 / 25, delta=0.005)
         self.assertAlmostEqual(cnt[2] / 100000, 1 / 25, delta=0.005)
         self.assertAlmostEqual(cnt[3] / 100000, 7 / 25, delta=0.005)
+
+    def test_case_2(self):
+        s = Solution([1, 3])
+        # this test is not deterministic, so it is not guaranteed to pass
+        cnt = Counter()
+        for _ in range(100000):
+            n = s.pickIndex()
+            cnt[n] += 1
+        self.assertAlmostEqual(cnt[0] / 100000, 1 / 4, delta=0.005)
+        self.assertAlmostEqual(cnt[1] / 100000, 3 / 4, delta=0.005)
+
+    def test_case_3(self):
+        s = Solution([1])
+        # this test is not deterministic, so it is not guaranteed to pass
+        cnt = Counter()
+        for _ in range(100000):
+            n = s.pickIndex()
+            cnt[n] += 1
+        self.assertAlmostEqual(cnt[0] / 100000, 1, delta=0.005)
+
+    def test_case_4(self):
+        s = Solution([1, 3, 1])
+        # this test is not deterministic, so it is not guaranteed to pass
+        cnt = Counter()
+        for _ in range(100000):
+            n = s.pickIndex()
+            cnt[n] += 1
+        self.assertAlmostEqual(cnt[0] / 100000, 1 / 5, delta=0.005)
+        self.assertAlmostEqual(cnt[1] / 100000, 3 / 5, delta=0.005)
+        self.assertAlmostEqual(cnt[2] / 100000, 1 / 5, delta=0.005)
 
 
 if __name__ == "__main__":
