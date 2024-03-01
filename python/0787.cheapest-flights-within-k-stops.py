@@ -57,8 +57,8 @@
 
 import heapq
 import unittest
-from collections import defaultdict, namedtuple
-from typing import List
+from collections import defaultdict
+from typing import List, NamedTuple
 
 
 #  start_marker
@@ -66,41 +66,61 @@ class Solution:
     def findCheapestPrice(
         self, n: int, flights: List[List[int]], src: int, dst: int, k: int
     ) -> int:
-        Flt = namedtuple("Flt", "cost hops dest")
-        Hop = namedtuple("Hop", "cost city")
-        distances = [[None] * n for _ in range(k + 1)]
-        min_dist = 2**31
+        # Define named tuples for flights and hops
+        Flt = NamedTuple("Flt", [("cost", int), ("hops", int), ("dest", int)])
+        Hop = NamedTuple("Hop", [("cost", int), ("city", int)])
+
+        # Define a maximum distance (greater than 99 * 10⁴
+        MAX_DIST = 100 * 10**4 + 1
+
+        # Initialize distances and minimum distance
+        distances: List[List[int]] = [[MAX_DIST] * n for _ in range(k + 1)]
+        min_dist: int = MAX_DIST
+
+        # Create a dictionary to store next hops for each city
         next_hops_dict: defaultdict[int, List[Hop]] = defaultdict(lambda: [])
         for flight in flights:
             from_, to, price = flight
             next_hops_dict[from_].append(Hop(cost=price, city=to))
+
+        # Initialize the heap with the starting point
         init = Flt(0, 0, src)
         heap = [init]
+
+        # Dijkstra's algorithm, I mean kinda?
         while heap:
             np = heapq.heappop(heap)
+
+            # Skip if the number of hops exceeds the limit
             if np.hops - 1 > k:
                 continue
+
+            # Update the minimum distance if the destination is reached
             if np.dest == dst:
                 min_dist = min(min_dist, np.cost)
+
+            # Get the next hops from the current city
             next_hops: List[Hop] = next_hops_dict[np.dest]
             for hop in next_hops:
+                # Skip if the number of hops exceeds the limit for the next city
                 if hop.city != dst and np.hops + 1 > k:
                     continue
+
+                # Update the distance if it is shorter than the current distance
                 if np.hops <= k:
-                    if distances[np.hops][hop.city] is None:
-                        distances[np.hops][hop.city] = np.cost + hop.cost
-                    elif np.cost + hop.cost >= distances[np.hops][hop.city]:
+                    if np.cost + hop.cost >= distances[np.hops][hop.city]:
                         continue
-                    else:
-                        distances[np.hops][hop.city] = np.cost + hop.cost
+                    distances[np.hops][hop.city] = np.cost + hop.cost
                     if hop.city == dst:
                         min_dist = min(min_dist, distances[np.hops][hop.city])
+
+                # Add the next hop to the heap
                 if np.hops < k:
                     heapq.heappush(heap, Flt(np.cost + hop.cost, np.hops + 1, hop.city))
 
-        if min_dist == 2**31:
+        # Return -1 if there is no valid path, otherwise return the minimum distance
+        if min_dist == MAX_DIST:
             min_dist = -1
-
         return min_dist
         #  end_marker
 
