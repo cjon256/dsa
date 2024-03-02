@@ -42,9 +42,7 @@ class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         num_set = SortedSet(nums)
         max_interval = 0
-        while True:
-            if not num_set:
-                break
+        while num_set:
             start = end = num_set.pop(0)
             while end + 1 in num_set:
                 end = num_set.pop(0)
