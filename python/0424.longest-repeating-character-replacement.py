@@ -37,7 +37,7 @@
 #  	s consists of only uppercase English letters.
 #  	0 <= k <= s.length
 #
-
+#
 # the completely wrong path I went down initially
 #
 #     def characterReplacement(self, s: str, k: int) -> int:
@@ -95,6 +95,46 @@ from typing import List
 #  start_marker
 class Solution:
     def characterReplacement(self, s: str, k: int) -> int:
+        if k > len(s):
+            return len(s)
+
+        class DumbCounter:
+            def __init__(self):
+                self.counts = [0] * 26
+                self.max = 0
+
+            def add(self, c: str):
+                i = ord(c) - ord("A")
+                self.counts[i] += 1
+                self.max = max(self.counts)
+                return self.max
+
+            def subtract(self, c: str):
+                i = ord(c) - ord("A")
+                self.counts[i] -= 1
+
+        letters_by_freq = DumbCounter()
+
+        max_count = 0
+        left = 0
+        right = 0
+        while True:
+            top = letters_by_freq.add(s[right])
+            right += 1
+            while right - left - top > k:
+                # print(f"{left} {right} {s[left:right]} pop {s[left]}")
+                letters_by_freq.subtract(s[left])
+                left += 1
+            # print(f"now valid... {left} {right} [{s[left:right]}] {right - left}")
+            # print(f"  {letters_by_freq.most_common(1)}")
+            max_count = max(max_count, right - left)
+            if right >= len(s):
+                break
+
+        return max_count
+        #  end_marker
+
+    def characterReplacement_TLE(self, s: str, k: int) -> int:
         letters_by_freq = Counter(s).most_common()
         max_count = 0
 
@@ -133,7 +173,6 @@ class Solution:
         return max_count
 
 
-#  end_marker
 class TestSolution(unittest.TestCase):
     def test_case_1(self):
         s = "ABAB"
