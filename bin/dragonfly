@@ -1,0 +1,203 @@
+#!env python3
+
+import os
+import re
+from typing import Any, List, Tuple
+
+# based on
+# https://ubiquitous-dragonfly-2fd.notion.site/12-Week-Leetcode-Preparation-Guide-e8e0b24383f54b0fb52832ef99b42c34
+# fmt: off
+dragonfly: List[Tuple[int,str,str]] = [
+    (1,   "maximum-average-subarray-i", "Arrays/Sliding Window: study 1"),
+    (2,   "find-all-anagrams-in-a-string", "Arrays/Sliding Window: study 2"),
+    (3,   "permutation-in-string", "Arrays/Sliding Window: study 3"),
+    (4,   "count-unique-characters-of-all-substrings-of-a-given-string", "Arrays/Sliding Window: study 4"),
+    (5,   "substrings-of-size-three-with-distinct-characters", "Arrays/Sliding Window: practice 1"),
+    (6,   "minimum-size-subarray-sum", "Arrays/Sliding Window: practice 2"),
+    (7,   "longest-repeating-character-replacement", "Arrays/Sliding Window: practice 3"),
+    (8,   "longest-substring-without-repeating-characters", "Arrays/Sliding Window: practice 4"),
+    (9,   "sliding-window-maximum", "Arrays/Sliding Window: practice 5"),
+    (10,  "minimum-window-substring", "Arrays/Sliding Window: practice 6"),
+    (11,  "backspace-string-compare", "Arrays/Two Pointers: study 1"),
+    (12,  "3sum", "Arrays/Two Pointers: study 2"),
+    (13,  "sort-colors", "Arrays/Two Pointers: study 3"),
+    (14,  "container-with-most-water", "Arrays/Two Pointers: study 4"),
+    (15,  "two-sum", "Arrays/Two Pointers: practice 1"),
+    (16,  "squares-of-a-sorted-array", "Arrays/Two Pointers: practice 2"),
+    (17,  "subarray-product-less-than-k", "Arrays/Two Pointers: practice 3"),
+    (18,  "3sum-closest", "Arrays/Two Pointers: practice 4"),
+    (19,  "trapping-rain-water", "Arrays/Two Pointers: practice 5"),
+    (20,  "letter-combinations-of-a-phone-number", "Arrays/Recursion & Backtracking: study 1"),
+    (21,  "combination-sum", "Arrays/Recursion & Backtracking: study 2"),
+    (22,  "permutations", "Arrays/Recursion & Backtracking: study 3"),
+    (23,  "combinations", "Arrays/Recursion & Backtracking: study 4"),
+    (24,  "subsets", "Arrays/Recursion & Backtracking: study 5"),
+    (25,  "generate-parentheses", "Arrays/Recursion & Backtracking: practice 1"),
+    (26,  "combination-sum-ii", "Arrays/Recursion & Backtracking: practice 2"),
+    (27,  "permutations-ii", "Arrays/Recursion & Backtracking: practice 3"),
+    (28,  "subsets-ii", "Arrays/Recursion & Backtracking: practice 4"),
+    (29,  "palindrome-partitioning", "Arrays/Recursion & Backtracking: practice 5"),
+    (30,  "target-sum", "Arrays/Recursion & Backtracking: practice 6"),
+    (31,  "combination-sum-iii", "Arrays/Recursion & Backtracking: practice 7"),
+    (32,  "sudoku-solver", "Arrays/Recursion & Backtracking: practice 8"),
+    (33,  "find-smallest-letter-greater-than-target", "Arrays/Binary Search: study 1"),
+    (34,  "find-peak-element", "Arrays/Binary Search: study 2"),
+    (35,  "peak-index-in-a-mountain-array", "Arrays/Binary Search: study 3"),
+    (36,  "search-in-rotated-sorted-array", "Arrays/Binary Search: study 4"),
+    (37,  "first-bad-version", "Arrays/Binary Search: practice 1"),
+    (38,  "search-in-rotated-sorted-array-ii", "Arrays/Binary Search: practice 2"),
+    (39,  "find-minimum-in-rotated-sorted-array", "Arrays/Binary Search: practice 3"),
+    (40,  "search-a-2d-matrix", "Arrays/Binary Search: practice 4"),
+    (41,  "count-of-range-sum", "Arrays/Binary Search: practice 5"),
+    (42,  "valid-parentheses", "Arrays/Stack: study 1"),
+    (43,  "maximum-subarray-min-product", "Arrays/Stack: study 2"),
+    (44,  "minimum-add-to-make-parentheses-valid", "Arrays/Stack: study 3"),
+    (45,  "merge-intervals", "Arrays/Stack: study 4"),
+    (46,  "maximum-frequency-stack", "Arrays/Stack: study 5"),
+    (47,  "daily-temperatures", "Arrays/Stack: practice 1"),
+    (48,  "asteroid-collision", "Arrays/Stack: practice 2"),
+    (49,  "next-greater-element-ii", "Arrays/Stack: practice 3"),
+    (50,  "132-pattern", "Arrays/Stack: practice 4"),
+    (51,  "largest-rectangle-in-histogram", "Arrays/Stack: practice 5"),
+    (52,  "number-of-visible-people-in-a-queue", "Arrays/Stack: practice 6"),
+    (53,  "gas-station", "Arrays/Greedy: study 1"),
+    (54,  "largest-number", "Arrays/Greedy: study 2"),
+    (55,  "remove-duplicate-letters", "Arrays/Greedy: study 3"),
+    (56,  "remove-k-digits", "Arrays/Greedy: study 4"),
+    (57,  "integer-replacement", "Arrays/Greedy: study 5"),
+    (58,  "longest-palindrome", "Arrays/Greedy: practice 1"),
+    (59,  "shortest-unsorted-continuous-subarray", "Arrays/Greedy: practice 2"),
+    (60,  "valid-triangle-number", "Arrays/Greedy: practice 3"),
+    (61,  "increasing-triplet-subsequence", "Arrays/Greedy: practice 4"),
+    (62,  "best-time-to-buy-and-sell-stock-ii", "Arrays/Greedy: practice 5"),
+    (63,  "minimum-depth-of-binary-tree", "Trees-BFS: study 1"),
+    (64,  "populating-next-right-pointers-in-each-node", "Trees-BFS: study 2"),
+    (65,  "binary-tree-zigzag-level-order-traversal", "Trees-BFS: study 3"),
+    (66,  "binary-tree-level-order-traversal-ii", "Trees-BFS: study 4"),
+    (67,  "binary-tree-level-order-traversal", "Trees-BFS: practice 1"),
+    (68,  "average-of-levels-in-binary-tree", "Trees-BFS: practice 2"),
+    (69,  "populating-next-right-pointers-in-each-node-ii", "Trees-BFS: practice 3"),
+    (70,  "binary-tree-right-side-view", "Trees-BFS: practice 4"),
+    (71,  "all-nodes-distance-k-in-binary-tree", "Trees-BFS: practice 5"),
+    (72,  "same-tree", "Trees/DFS: study 1"),
+    (73,  "merge-two-binary-trees", "Trees/DFS: study 2"),
+    (74,  "construct-binary-tree-from-preorder-and-inorder-traversal", "Trees/DFS: study 3"),
+    (75,  "path-sum", "Trees/DFS: study 4"),
+    (76,  "diameter-of-binary-tree", "Trees/DFS: study 5"),
+    (77,  "lowest-common-ancestor-of-a-binary-tree", "Trees/DFS: study 6"),
+    (78,  "maximum-depth-of-binary-tree", "Trees/DFS: practice 1"),
+    (79,  "invert-binary-tree", "Trees/DFS: practice 2"),
+    (80,  "path-sum-ii", "Trees/DFS: practice 3"),
+    (81,  "binary-tree-maximum-path-sum", "Trees/DFS: practice 4"),
+    (82,  "sum-root-to-leaf-numbers", "Trees/DFS: practice 5"),
+    (83,  "implement-trie-(prefix-tree)", "Trees/DFS: practice 6"),
+    (84,  "kth-smallest-element-in-a-bst", "Trees/DFS: practice 7"),
+    (85,  "lowest-common-ancestor-of-a-binary-search-tree", "Trees/DFS: practice 8"),
+    (86,  "validate-binary-search-tree", "Trees/DFS: practice 9"),
+    (87,  "word-search-ii", "Trees/DFS: practice 10"),
+    (88,  "path-sum-iii", "Trees/DFS: practice 11"),
+    (89,  "subtree-of-another-tree", "Trees/DFS: practice 12"),
+    (90,  "maximum-binary-tree", "Trees/DFS: practice 13"),
+    (91,  "maximum-width-of-binary-tree", "Trees/DFS: practice 14"),
+    (92,  "serialize-and-deserialize-binary-tree", "Trees/DFS: practice 15"),
+    (93,  "flood-fill", "Matrices/BFS & DFS: study 1"),
+    (94,  "number-of-islands", "Matrices/BFS & DFS: study 2"),
+    (95,  "max-area-of-island", "Matrices/BFS & DFS: study 3"),
+    (96,  "island-perimeter", "Matrices/BFS & DFS: practice 1"),
+    (97,  "pacific-atlantic-water-flow", "Matrices/BFS & DFS: practice 2"),
+    (98,  "surrounded-regions", "Matrices/BFS & DFS: practice 3"),
+    (99,  "count-sub-islands", "Matrices/BFS & DFS: practice 4"),
+    (100, "evaluate-division", "Graphs/BFS & DFS: study 1"),
+    (101, "get-watched-videos-by-your-friends", "Graphs/BFS & DFS: study 2"),
+    (102, "clone-graph", "Graphs/BFS & DFS: study 3"),
+    (103, "number-of-operations-to-make-network-connected", "Graphs/BFS & DFS: study 4"),
+    (104, "accounts-merge", "Graphs/BFS & DFS: practice 1"),
+    (105, "number-of-provinces", "Graphs/BFS & DFS: practice 2"),
+    (106, "course-schedule-ii", "Graphs/BFS & DFS: practice 3"),
+    (107, "redundant-connection", "Graphs/BFS & DFS: practice 4"),
+    (108, "network-delay-time", "Graphs/Shortest Path & Dijkstra’s: study 1"),
+    (109, "path-with-maximum-probability", "Graphs/Shortest Path & Dijkstra’s: study 2"),
+    (110, "word-ladder", "Graphs/Shortest Path & Dijkstra’s: study 3"),
+    (111, "cut-off-trees-for-golf-event", "Graphs/Shortest Path & Dijkstra’s: study 4"),
+    (112, "path-with-minimum-effort", "Graphs/Shortest Path & Dijkstra’s: practice 1"),
+    (113, "cheapest-flights-within-k-stops", "Graphs/Shortest Path & Dijkstra’s: practice 2"),
+    (114, "critical-connections-in-a-network", "Graphs/Shortest Path & Dijkstra’s: practice 3"),
+    (115, "shortest-path-to-get-all-keys", "Graphs/Shortest Path & Dijkstra’s: practice 4"),
+]
+# fmt: on
+
+# get the output of leetcode list
+leetcode_list = os.popen("leetcode list").read().split("\n")
+
+""" leetcode list now looks like this:
+      ✔ [  1 ] Two Sum                                                      Easy   (51.64 %)
+        [  2 ] Add Two Numbers                                              Medium (42.08 %)
+        [  3 ] Longest Substring Without Repeating Characters               Medium (34.39 %)
+        [  4 ] Median of Two Sorted Arrays                                  Hard   (39.07 %)
+        [  5 ] Longest Palindromic Substring                                Medium (33.51 %)
+        [  6 ] Zigzag Conversion                                            Medium (47.05 %)
+        [  7 ] Reverse Integer                                              Medium (28.25 %)
+        [  8 ] String to Integer (atoi)                                     Medium (17.01 %)
+        [  9 ] Palindrome Number                                            Easy   (55.40 %)
+        [ 10 ] Regular Expression Matching                                  Hard   (28.04 %)
+...
+        [3017] Count the Number of Houses at a Certain Distance II          Hard   (17.02 %)
+  🔒    [3018] Maximum Number of Removal Queries That Can Be Processed I    Hard   (52.27 %)
+
+        Listed: 2936     Locked: 574      Starred: 0
+        Accept: 47       Not-Ac: 0        Remain:  2889
+        Easy  : 717      Medium: 1557     Hard:    662
+
+"""
+LOCK = "🔒"  # note that this is double-wide
+CHK = "✔"
+
+leetcode_dict = {}
+leetcode_by_name = {}
+for i in leetcode_list:
+    if i:
+        if "[" not in i:
+            continue
+        locked = LOCK in i
+        checked = CHK in i
+        number = i.split("[")[1].split("]")[0].strip()
+        name = i[14:74].strip()
+        hardness = i[75:].strip()
+        entry = {
+            "line": i,
+            "name": name,
+            "hardness": hardness,
+            "checked": checked,
+            "locked": locked,
+            "number": number,
+        }
+        leetcode_dict[int(number)] = entry
+        # since the names we need are lowercase and hypenated
+        lname = re.sub(" ", "-", name).lower()
+        leetcode_by_name[lname] = int(number)
+
+patt: List[Any]
+for fly in dragonfly:
+    num: int
+    dname: str
+    topic: str
+    num, dname, topic = fly
+    leet_num = leetcode_by_name.get(dname, None)
+    if leet_num is None:
+        print(f"Could not find {dname}")
+        continue
+    leet_info = leetcode_dict[leet_num]
+    if leet_info["locked"]:
+        priv = "🔒"
+    else:
+        priv = "  "
+    if leet_info["checked"]:
+        chk = "✔"
+    else:
+        chk = " "
+
+    leet_name = leet_info["name"]
+    leet_hard = leet_info["hardness"]
+    name_num = f"{leet_name:60}[{leet_num:04d}]"
+    result = f"{num: 4d} {priv:2} {chk:1} {name_num:64} {topic:46} {leet_hard:6}"
+    print(result)
