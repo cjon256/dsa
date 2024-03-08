@@ -1,3 +1,6 @@
+#  Category: algorithms
+#  Level:
+#  Percent:
 # pylint: enable=useless-suppression
 # pylint: disable=invalid-name, line-too-long, too-few-public-methods
 # pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
