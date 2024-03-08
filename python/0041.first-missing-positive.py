@@ -1,11 +1,9 @@
-# pylint: disable=invalid-name, missing-class-docstring, missing-function-docstring, missing-module-docstring
-# pylint: disable=too-few-public-methods
-import unittest
-from typing import List, Optional
-
 #  Category: algorithms
 #  Level: Hard
 #  Percent: 37.618618%
+# pylint: disable=invalid-name, missing-class-docstring, missing-function-docstring, missing-module-docstring
+# pylint: disable=too-few-public-methods
+
 #  Given an unsorted integer array nums, return the smallest missing positive integer.
 #
 #  You must implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.
@@ -39,6 +37,9 @@ from typing import List, Optional
 #  	1 <= nums.length <= 10⁵
 #  	-2³¹ <= nums[i] <= 2³¹ - 1
 #
+
+import unittest
+from typing import List, Optional
 
 
 #  start_marker
