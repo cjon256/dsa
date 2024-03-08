@@ -1,3 +1,5 @@
+Note: Currently this workflow is broken due to leetcode changing their code and that breaking leetcode-cli (and many other similar tools)
+
 # Data Structures and Algorithms
 
 This is used to provide an easy nvim based workflow in Python. Rust and Go to grind on leet code.
