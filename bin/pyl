@@ -14,10 +14,6 @@ import leetopenlib
 base_path = os.environ.get("LEET_CODE_PATH")
 
 argparser = argparse.ArgumentParser(description="leet")
-argparser.add_argument("-f", action="store_true", help="force overwrite")
-argparser.add_argument(
-    "subcommand", choices=["create", "c", "test", "t", "submit", "x", "edit", "info"]
-)
 argparser.add_argument("problem", help="problem number")
 args = argparser.parse_args()
 
@@ -39,18 +35,8 @@ local_path = f"{base_path}/python/{filename}"
 template_path = f"{base_path}/python/0.template.py"
 
 
-def create_problem():
-    if os.path.exists(local_path) and not args.f:
-        print(f"python/{filename} already exists")
-        sys.exit(1)
-    os.system(f"cp '{template_path}' '{local_path}'")
-    print(f"created python/{filename}")
-
-
-print(f"problem {problem_id} {problem_name} {args.subcommand}")
-
-if args.subcommand in ["create", "c"]:
-    create_problem()
-else:
-    print("unknown subcommand")
+if os.path.exists(local_path):
+    print(f"python/{filename} already exists")
     sys.exit(1)
+os.system(f"cp '{template_path}' '{local_path}'")
+print(f"created python/{filename}")
