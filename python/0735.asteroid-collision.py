@@ -48,7 +48,6 @@ from typing import List
 #  start_marker
 class Solution:
     def asteroidCollision(self, asteroids: List[int]) -> List[int]:
-
         pass
 
         #  end_marker
