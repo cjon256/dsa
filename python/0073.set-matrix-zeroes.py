@@ -51,14 +51,53 @@ class Solution:
         """
         Do not return anything, modify matrix in-place instead.
         """
-        pass
+        FAKE_ZERO = 1000
+
+        def set_row_zero(r):
+            for col in range(len(matrix[0])):
+                if matrix[r][col] != 0:
+                    matrix[r][col] = FAKE_ZERO
+
+        def set_col_zero(c):
+            for row in range(len(matrix)):
+                if matrix[row][c] != 0:
+                    matrix[row][c] = FAKE_ZERO
+
+        def fix_fake_zeros(r, c):
+            if matrix[r][c] == FAKE_ZERO:
+                matrix[r][c] = 0
+
+        for row in range(len(matrix)):
+            for col in range(len(matrix[0])):
+                if matrix[row][col] == 0:
+                    set_row_zero(row)
+                    set_col_zero(col)
+
+        for row in range(len(matrix)):
+            for col in range(len(matrix[0])):
+                fix_fake_zeros(row, col)
 
         #  end_marker
 
 
 class TestSolution(unittest.TestCase):
     def test_case_1(self):
-        pass
+        matrix = [[1, 1, 1], [1, 0, 1], [1, 1, 1]]
+        expected_result = [[1, 0, 1], [0, 0, 0], [1, 0, 1]]
+        Solution().setZeroes(matrix)
+        self.assertEqual(matrix, expected_result)
+
+    def test_case_2(self):
+        matrix = [[0, 1, 2, 0], [3, 4, 5, 2], [1, 3, 1, 5]]
+        expected_result = [[0, 0, 0, 0], [0, 4, 5, 0], [0, 3, 1, 0]]
+        Solution().setZeroes(matrix)
+        self.assertEqual(matrix, expected_result)
+
+    def test_case_3(self):
+        matrix = [[1, 2, 3, 4], [5, 0, 7, 8], [0, 10, 11, 12], [13, 14, 15, 0]]
+        expected_result = [[0, 0, 3, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        Solution().setZeroes(matrix)
+        self.assertEqual(matrix, expected_result)
 
 
 if __name__ == "__main__":
